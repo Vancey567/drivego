@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true},
-    phone: { type: Number, required: true},
+    email: { type: String, required: true, unique: true },
+    phone: { type: Number, required: true, unique: true },
     gender: { type: String, enum: ["male", "female", "transgender", "others"], required: false},
     dob: {type: Date, required: false},
     occupation: {type: String, required: false},
