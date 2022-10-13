@@ -15,6 +15,8 @@ router.post('/verifyotp', authController.verifyOtp);
 router.post('/rider/createtrip', rideController.createRide);
 
 router.post('/registervehicle', vehicleController.registerVehicle);
+router.get('/vehicles', vehicleController.allVehicles);
+router.post('/removevehicle', vehicleController.removeVehicle);
 
 
 module.exports = router;
