@@ -1,3 +1,5 @@
+const Trips = require('../models/trip-model');
+
 class tripService {
     async findVehicle() {
         
@@ -9,6 +11,16 @@ class tripService {
 
     async activateDriver() {
 
+    }
+
+    async saveTrip(data) {
+        try {
+            const trip = await Trips.create(data);
+            return trip;
+        } catch(err) {
+            console.log(err);
+            throw new Error(err.message);
+        }
     }
 }
 

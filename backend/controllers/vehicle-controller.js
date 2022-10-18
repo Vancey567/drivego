@@ -1,27 +1,29 @@
 const Vehicles = require('../models/vehicle-model');
 const VehicleService = require('../services/vehicle-service');
+const vehicleDto = require('../dtos/vehicle-dtos'); 
+
 class VehicleController {
     async registerVehicle(req, res) {
-        const {owner, vehicleNumber, model, type, capacity, color, carImg } = req.body;
+        const {owner, vehicleNumber, model, type, capacity, color, carImg} = req.body;
 
         try {
             const vehicle = await Vehicles.find({vehicleNumber: vehicleNumber});
 
-            if(vehicle) {
+            if(vehicle.length !== 0 && vehicle) {
+                console.log(vehicle);
                 return res.json({message: `Vehicle with vehicle number ${vehicleNumber} is already registered!!`});
             }
-
-            const vehicleObj = new Vehicles({
-                owner, vehicleNumber, model, type, capacity, color, carImg
-            })
             
-            vehicleObj.save()
-            .then(() => {
-                res.status(200).json({message: "Vehicle Registered Successfully!!"})
-            }).catch(err => {
-                console.log(err);
-                res.status(500).json({message: "Problem Registering the Vehicle!!"});
-            })
+            if(!vehicle || vehicle.length === 0 || vehicle === null){
+                try {
+                    const vDto = new vehicleDto({ owner, vehicleNumber, model, type, capacity, color, carImg});
+                    const savedVehicle = await VehicleService.saveVehicle(vDto);
+                    res.status(200).json({message: "Vehicle Registered Successfully!!"})
+                } catch(err) {
+                    console.log(err);
+                    res.status(500).json({message: "Problem Registering the Vehicle!!"});
+                }
+            }
         } catch(err) {
             console.log(err);
             res.status(500).json({message: "Problem Registering the Vehicle!!"});
@@ -31,7 +33,7 @@ class VehicleController {
     async allVehicles(req, res) {
         try {
             const vehicles = VehicleService.findVehicle();
-            
+
             if(vehicles.length === 0) {
                 return res.status(404).json({message: "No Vehicle Found, Register One!!"});
             }

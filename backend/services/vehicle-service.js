@@ -1,9 +1,34 @@
-const Vehicles = require('../models/vehicle-model');
+const VehiclesModel = require('../models/vehicle-model');
 
 class VehicleService {
     async findVehicle() {
-        const vehicles = await Vehicles.find();
-        return vehicles;
+        try {
+            const vehicles = await VehiclesModel.find();
+            return vehicles;
+        } catch(err) {
+            console.log(err);
+            throw new Error(err.message);
+        }
+    }
+
+    async findAllVehicle() {
+        try {
+            const vehicles = await VehiclesModel.find();
+            return vehicles;
+        } catch(err) {
+            console.log(err);
+            throw new Error(err.message);
+        }
+    }
+
+    async saveVehicle(data) {
+        try {
+            const vehicle = await VehiclesModel.create(data);
+            return vehicle;
+        } catch(err) {
+            console.log(err);
+            throw new Error(err.message);
+        }
     }
 }
 
