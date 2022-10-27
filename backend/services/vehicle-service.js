@@ -1,9 +1,19 @@
 const VehiclesModel = require('../models/vehicle-model');
 
 class VehicleService {
-    async findVehicle() {
+    async findVehicleById(vehicleId) {
         try {
-            const vehicles = await VehiclesModel.find();
+            const vehicles = await VehiclesModel.findById(vehicleId);
+            return vehicles;
+        } catch(err) {
+            console.log(err);
+            throw new Error(err.message);
+        }
+    }
+
+    async findVehicleByNumber(vehicleNo) {
+        try {
+            const vehicles = await VehiclesModel.find({vehicleNumber: vehicleNo});
             return vehicles;
         } catch(err) {
             console.log(err);

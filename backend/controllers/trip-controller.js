@@ -6,7 +6,6 @@ const Trips = require('../models/trip-model');
 
 class TripController {
     async createTrip(req, res) {
-        // await vehicleService.findVehicle();
         // if(driver.isActivated) {
         //     await tripService.generateTrip(req.body);
         // } else {
@@ -19,15 +18,15 @@ class TripController {
             const trip = await Trips.findOne({vehicle: vehicle});
 
             if(trip && trip.status !== "completed") {
-                console.log(trip);
-                return res.status(409).json({message: `You already have a trip created with vehicle number ${tripNumber}`});
+                const vehicleDetails = await vehicleService.findVehicleById(vehicle);
+                return res.status(409).json({message: `You already have a trip created with vehicle number ${vehicleDetails.vehicleNumber}`});
             }
             
             if(!trip || trip === null){
                 try {
                     // const vDto = new tripDto({ driver, vehicle, rider, coRiders, availableSeats, seatType, source, destination, pickup, expectedStartTime, startTime, endTime, fare, paymentType, status});
                     const savedtrip = await tripService.saveTrip(req.body);
-                    res.status(200).json({message: "trip Registered Successfully!!"});
+                    res.status(200).json({message: `Trip Created Successfully!! ${savedtrip}`});
                 } catch(err) {
                     console.log(err);
                     res.status(500).json({message: "Problem Registering the trip!!"});
@@ -37,11 +36,10 @@ class TripController {
             console.log(err);
             res.status(500).json({message: "Problem Registering the trip!!"});
         }
-        
     }
 
 
-    async createRide(req, res, driver) {
+    async createRide(req, res) {
         authController.sendOtp();
     }
 }

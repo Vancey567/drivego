@@ -1,8 +1,14 @@
 const Trips = require('../models/trip-model');
 
 class tripService {
-    async findVehicle() {
-        
+    async findTrip({source, destination, time, seats}) {
+        try {
+            const trip = await Trips.find({source: source, destination: destination});
+            return trip;
+        } catch (err) {
+            console.log(err);
+            throw new Error(err);
+        }
     }
 
     async generateTrip({}) {
