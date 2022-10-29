@@ -3,14 +3,18 @@ const rideService = require('../services/ride-service');
 
 const tripService = require('../services/trip-service');
 
-
 class RideController {
     async createRide(req, res, params) {
         // const { rider, extraPerson, source, destinati, preferredTripTimeon, pickup, preferredVehicle, preferredSeatType, offeredFare, luggage } = req.body;
-        const {trip, ride} = req.body;
+        const {trip, ride, paymentType} = req.body;
         
-        const rideData = await rideService.createRide({trip, ride});
-
+        try {
+            const rideData = await rideService.createRide({trip, ride, paymentType});
+            return rideData;
+        } catch(err) {
+            console.log(err);
+            res.status(400).json({ message: "Problem Matching Ride"});
+        }
     }
 
     async findRide(req, res) {

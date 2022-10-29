@@ -17,8 +17,8 @@ const tripSchema = new Schema ({
     startTime: {type: Date, required: false},
     endTime: {type: Date, required: false},
     fare: {type: String, required: true},
-    paymentType: {type: String, enum:['Cash', 'Card', 'UPI', 'NetBanking'], required: true},
-    status: {type: String, required: true},
+    // paymentType: {type: String, enum:['Cash', 'Card', 'UPI', 'NetBanking'], required: true},
+    // status: {type: String, required: true},
 }, { timestamps: true })
 
 module.exports = mongoose.model('Trip', tripSchema);
