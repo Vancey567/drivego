@@ -8,7 +8,7 @@ const router = require('./routes/routes');
 const DbConnect = require('./database');
 const PORT = process.env.PORT;
 
-app.use(express.json());
+app.use(express.json({limit: "8mb"}));
 app.use(cookieParser());
 DbConnect();
 

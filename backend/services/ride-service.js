@@ -1,5 +1,5 @@
 const tripModel = require('../models/trip-model');
-
+const generatedTrip = require('../models/generatedTrip-model');
 class rideService {
     async findDriver({source, destination, time, seats}) {
         try {
@@ -9,6 +9,10 @@ class rideService {
             console.log(err);
             throw new Error(err.message);
         }
+    }
+
+    async createRide({trip, ride, paymentType}) {
+        await generatedTrip.create({trip, ride, paymentType});
     }
 }
 

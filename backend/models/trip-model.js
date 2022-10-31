@@ -6,7 +6,8 @@ const tripSchema = new Schema ({
     vehicle: {type: Schema.Types.ObjectId, ref: 'Vehicle'},
     rider: {type: Schema.Types.ObjectId, ref: 'Rider'},
     // extraPerson: {type: Number, required: true, min: 0, max: 10},
-    coRiders: {type: Schema.Types.ObjectId, ref: 'Rider'},
+    // coRiders: {type: Schema.Types.ObjectId, ref: 'Rider'},
+    coRiders: {type: String, required: true},
     availableSeats: {type: Number, required: true},
     seatType: {type: String, required: true},
     source: {type: String, required: true},
@@ -16,8 +17,8 @@ const tripSchema = new Schema ({
     startTime: {type: Date, required: false},
     endTime: {type: Date, required: false},
     fare: {type: String, required: true},
-    paymentType: {type: String, enum:['Cash', 'Card', 'UPI', 'NetBanking'], required: true},
-    status: {type: String, required: true},
+    // paymentType: {type: String, enum:['Cash', 'Card', 'UPI', 'NetBanking'], required: true},
+    // status: {type: String, required: true},
 }, { timestamps: true })
 
 module.exports = mongoose.model('Trip', tripSchema);
