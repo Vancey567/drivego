@@ -1,0 +1,68 @@
+<div class="limiter">
+    <div class="container-login">
+        <div class="wrap-login">
+            <div class="flex justify-content-between"> 
+                <button (click)="start('start-ride')" pButton type="button" label="Book a ride" class="p-button-warning w-5"></button>
+                <button (click)="start('start-trip')" pButton type="button" label="Create a trip" class="p-button-danger w-5"></button>
+                <!-- <span class="login-form-logo mb-3">
+                    <img src="assets/images/logo/logo.png" alt="logo">
+                </span>
+                <span class="login-form-title my-3">
+                    Log in
+                </span> 
+                <form class="" *ngIf="!OTPFormDisplay" #loginFormTag (submit)="login()" [formGroup]="loginForm">
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="mobile_number"d>Mobile Number:</label><br>
+                        <input type="number" for="mobile_number" pInputText class="w-full mt-2" placeholder="Enter your mobile number" formControlName="mobile_number">
+                    </div>
+
+                    <div class="flex justify-content-center align-items-center ">
+                        <button pButton type="submit" label="SEND OTP" class="p-button-success" [disabled]="loginForm.invalid || loginBtn" icon="" [loading]="loginBtn"></button>
+                    </div>
+                </form>
+
+                
+                <form class="" *ngIf="OTPFormDisplay" #verifyOTPFormTag (submit)="verifyOTP()" [formGroup]="verifyOTPForm">
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="verifyOTP"d>Enter OTP:</label><br>
+                        <input type="number" for="verifyOTP" pInputText class="w-full mt-2" placeholder="Enter OTP here" formControlName="verifyOTP">
+                    </div>
+
+                    <div class="flex justify-content-center align-items-center ">
+                        <button pButton type="submit" label="VERIFY OTP" class="p-button-success" [disabled]="verifyOTPForm.invalid || verifyOTPBtn" icon="" [loading]="verifyOTPBtn"></button>
+                    </div>
+                </form> -->
+            </div>
+        </div>
+    </div>
+</div>
+<p-dialog header="User Details" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false">
+    <form class="" (submit)="userDetails()" [formGroup]="userDetailsForm">
+        <div class="p-inputtext-sm w-full mb-4">
+            <label for="name"d>Name:</label><br>
+            <input type="text" for="name" pInputText class="w-full mt-2" placeholder="Enter your name" formControlName="name">
+        </div>
+
+        <div class="p-inputtext-sm w-full mb-4">
+            <label for="email"d>Email:</label><br>
+            <input type="email" for="email" pInputText class="w-full mt-2" placeholder="Enter your email address" formControlName="email">
+        </div>
+
+        <div class="p-inputtext-sm w-full mb-4">
+            <label for="dob"d>DOB:</label><br>
+            <input type="date" for="dob" pInputText class="w-full mt-2" placeholder="Enter your DOB" formControlName="dob">
+        </div>
+        
+        <div class="p-inputtext-sm w-full mb-4">
+            <label for="gender"d>Gender:</label><br>
+            <input type="text" for="gender" pInputText class="w-full mt-2" placeholder="Enter your gender" formControlName="gender">
+        </div>
+
+        <div class="flex justify-content-center align-items-center ">
+            <button pButton type="submit" label="SUBMIT" class="p-button-success" [disabled]="userDetailsForm.invalid || userDetailsBtn" icon="" [loading]="userDetailsBtn"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-toast></p-toast>

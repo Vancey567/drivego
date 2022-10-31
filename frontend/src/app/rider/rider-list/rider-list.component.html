@@ -1,0 +1,74 @@
+<div class="limiter">
+    <div class="container-login">
+        <div class="wrap-login">
+            
+            <h2 class="text-center mb-3">Available Riders</h2>
+
+            <div class="flex flex-column"> 
+                <p-card class="w-full">
+                    <div class="flex justify-content-between align-items-center w-full">
+                        <div class="flex justify-content-center align-items-center">
+                            <img src="assets/images/car1.jpeg" height="60px" class="">
+                        </div>
+                        <div>
+                            <p>Model: Desire</p>
+                            <p>Price: 100</p>
+                        </div>
+                        <div>
+                            <p>Source: Guwahati</p>
+                            <p>Time: 12:00 AM</p>
+                        </div>
+                        <button pButton type="button" label="Choose" class="p-button-primary p-button-sm" (click)="displayModal = true"></button>
+                    </div>
+                </p-card>
+                
+                <p-card class="w-full mt-3">
+                    <div class="flex justify-content-between align-items-center w-full">
+                        <div class="flex justify-content-center align-items-center">
+                            <img src="assets/images/car2.jpg" height="60px" class="">
+                        </div>
+                        <div>
+                            <p>Model: Desire</p>
+                            <p>Price: 200</p>
+                        </div>
+                        <div>
+                            <p>Source: Guwahati</p>
+                            <p>Time: 12:30 AM</p>
+                        </div>
+                        <button pButton type="button" label="Choose" class="p-button-primary p-button-sm" (click)="displayModal = true"></button>
+                    </div>
+                </p-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog header="Ride Details" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false">
+    <div class="flex justify-content-center align-items-center mb-3">
+        <img src="assets/images/car1.jpeg" width="50%" class="">
+    </div>
+    <div class="flex justify-content-around align-items-center w-full">
+        <div>
+            <p class="mb-2 text-md"><b>Driver Name:</b> Dipanka Kalita</p>
+            <p class="mb-2 text-md"><b>Model</b>: Desire</p>
+            <p class="mb-2 text-md"><b>Color</b>: Red</p>
+            <p class="mb-2 text-md"><b>Vehicle No</b>: AS 01 EG 9878</p>
+            <p class="mb-2 text-md"><b>Gender</b>: Male</p>
+        </div>
+        <div>
+            <p class="mb-2 text-md"><b>Source</b>: Guwahati</p>
+            <p class="mb-2 text-md"><b>Destination</b>: Nagaon</p>
+            <p class="mb-2 text-md"><b>Time</b>: 12:30 AM</p>
+            <p class="mb-2 text-md"><b>Price</b>: 200/-</p>
+            <p class="mb-2 text-md"><b>Available seat</b>: 2</p>
+        </div>
+    </div>
+    <div class="flex justify-content-center align-items-center mt-5">
+        <button pButton type="button" label="Request for ride" class="p-button-primary" (click)="displayModal = true"></button>
+    </div>
+    
+</p-dialog>
+
+
+<p-toast></p-toast>

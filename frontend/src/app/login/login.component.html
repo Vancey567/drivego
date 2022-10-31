@@ -1,0 +1,37 @@
+<div class="limiter">
+    <div class="container-login">
+        <div class="wrap-login">
+            <div class="login-form validate-form">    
+                <span class="login-form-logo mb-3">
+                    <img src="assets/images/logo/logo.png" alt="logo">
+                </span>
+                <span class="login-form-title my-3">
+                    Log in
+                </span>
+                <form class="" *ngIf="!OTPFormDisplay" #loginFormTag (submit)="login()" [formGroup]="loginForm">
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="mobile_number"d>Mobile Number:</label><br>
+                        <input type="number" for="mobile_number" pInputText class="w-full mt-2" placeholder="Enter your mobile number" formControlName="mobile_number">
+                    </div>
+
+                    <div class="flex justify-content-center align-items-center ">
+                        <button pButton type="submit" label="SEND OTP" class="p-button-success" [disabled]="loginForm.invalid || loginBtn" icon="" [loading]="loginBtn"></button>
+                    </div>
+                </form>
+
+                
+                <form class="" *ngIf="OTPFormDisplay" #verifyOTPFormTag (submit)="verifyOTP()" [formGroup]="verifyOTPForm">
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="verifyOTP"d>Enter OTP:</label><br>
+                        <input type="number" for="verifyOTP" pInputText class="w-full mt-2" placeholder="Enter OTP here" formControlName="verifyOTP">
+                    </div>
+
+                    <div class="flex justify-content-center align-items-center ">
+                        <button pButton type="submit" label="VERIFY OTP" class="p-button-success" [disabled]="verifyOTPForm.invalid || verifyOTPBtn" icon="" [loading]="verifyOTPBtn"></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<p-toast></p-toast>
