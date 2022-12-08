@@ -19,7 +19,7 @@ class AuthController {
             res.status(400).json({message: 'Phone number is required!'});
         }
 
-        if(!phone.match(phoneRegex)) {
+        if(!phone.toString().match(phoneRegex)) {
             res.status(400).json({message: 'Invalid Phone Number!'});
         }
 
@@ -45,11 +45,12 @@ class AuthController {
     }
     
     async verifyOtp(req, res) {
-        const { otp, hash, phone, name, email } = req.body;
+        // const { otp, hash, phone, name, email } = req.body;
+        const { otp, hash, phone} = req.body;
         if(!otp || !hash || !phone) {
             res.status(400).json({message: 'All fields are required'});
         }
-        if(!phone.match(regex)) {
+        if(!phone.toString().match(phoneRegex)) {
             res.status(400).json({message: 'Invalid Phone Number!'});
         }
         const [ hashedOtp, expires ] = hash.split('.'); // split expires from hash
@@ -58,28 +59,27 @@ class AuthController {
         }
 
         const data = `${phone}.${otp}.${expires}`;
-        const isValid = otpService.verifyOtp(hashedOtp, data);
+        const isValid = await otpService.verifyOtp(hashedOtp, data);
         if(!isValid) {
-            res.status(400).json({message: 'Invalid OTP'});
+            return res.status(500).json({message: 'Invalid OTP', otpValid: false});
         }
 
-        let user;         
+        let user;
         try {
             user = await userService.findUser({phone: phone});// Find the user from the data using there phone number
-
-            if(!user || user === null) {
-                user = await userService.createUser({ phone: phone, name, email }); // if user does not exist, create user and store it in user variable
+            if(!user || user == null) {
+                user = await userService.createUser({ phone: phone}); // if user does not exist, create user and store it in user variable
             }
-            return res.json({userId: user._id});
+            // return res.json({userId: user._id});
         } catch(err) {
             console.log(err);
-            res.status(500).json({ message: "DB error" });
+            return res.status(500).json({ message: "DB error" });
         }
 
         // Generate JWT token
         const { accessToken, refreshToken } = tokenService.generateTokens({
             _id: user._id,
-            activated: false 
+            activated: false
         }); 
 
         // Before storing the refresh token into the cookie we will the store refresh token in the DB
@@ -96,8 +96,8 @@ class AuthController {
             httpOnly: true,
         })
 
-        const userDto = new UserDto(user);
-        res.json({ user: userDto, auth: true });
+        const userDto = new UserDto(user);       
+        return res.json({ user: userDto, otpValid: true });
     }
 
     async refresh(req, res) {
@@ -161,24 +161,61 @@ class AuthController {
         res.json({ user: userDto, auth: true });
     }
 
-    async logout(req, res) {
-        const { refreshToken } = req.cookies;
+    // async register(req, res) {
+    //     const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    //     let {name, gender, dob, email, phone, occupation, password} = req.body;
+    //     console.log(password);
+        
 
-        await tokenService.removeToken(refreshToken);
+    //     if(!name || !gender || !dob || !email || !phone || !password) {
+    //         return res.json({error: "All fields are required!!"});
+    //     }
 
-        // 3. delete that cookies from DB
-        res.clearCookie('refreshToken'); // res has this clearCookie() method inside which we need to pass the key of the cookie(here refreshToken and accessToken) to clear/delete the cookkie
-        res.clearCookie('accessToken');
-    
-        res.json({ user: null, auth: false }); // now we will send the user as null(since no user) and make the auth as false (not authenticted);
-    }
+    //     if(!email.match(emailRegex)) {
+    //         return res.json({error: "Email format incorrect!!"});
+    //     }
 
+    //     Users.exists({ email: email }, async (err, user) => {
+    //         if (user) {
+    //             return res.json({error: "User already exists!"});
+    //         } else if(err) {
+    //             return res.json({error: "Something went wrong!"});
+    //         } else {
+    //             let sendOtpRes = await supertest(`http://${req.get("host")}`).post('/sendotp').send({ phone });
 
+    //             const otpData = {
+    //                 otp: sendOtpRes.body.otp, 
+    //                 hash: sendOtpRes.body.hash,
+    //                 phone: sendOtpRes.body.phone,
+    //                 name, 
+    //                 email 
+    //             }
+
+    //             let verifyOtp = await supertest(`http://${req.get("host")}`).post('/verifyotp').send(otpData);               
+    //             const userId = verifyOtp.body.user.id;
+
+    //             // const hashedPassword = await hashService.hashPassword(password);
+                
+    //             // console.log("hashedPassword", hashedPassword);
+
+    //             const user = await Users.findOneAndUpdate({_id: ObjectId(userId)}, {
+    //                 gender: gender,
+    //                 dob: dob,
+    //                 occupation: occupation,
+    //                 // password: password,
+    //                 password: await hashService.hashPassword(password),
+    //             }, {
+    //                 new: true // returns the newly updated document
+    //             })
+    //             return res.status(200).json({user: user, message: "User Registered"});
+    //         }
+    //     })
+    // }
     async register(req, res) {
         const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        let {name, gender, dob, email, phone, occupation, password} = req.body;
+        let {userId, name, gender, dob, email, occupation} = req.body;      
 
-        if(!name || !gender || !dob || !email || !phone || !password) {
+        if(!userId, !name || !gender || !dob || !email) {
             return res.json({error: "All fields are required!!"});
         }
 
@@ -192,30 +229,18 @@ class AuthController {
             } else if(err) {
                 return res.json({error: "Something went wrong!"});
             } else {
-                // let sendOtpRes = await supertest(`http://${req.get("host")}`).post('/sendotp').send({ phone });
-
-                const someData = {
-                    otp: sendOtpRes.body.otp, 
-                    hash: sendOtpRes.body.hash,
-                    phone: sendOtpRes.body.phone,
-                    name, 
-                    email 
-                }
-
-                // let verifyOtp = await supertest(`http://${req.get("host")}`).post('/verifyotp').send(someData);
-                const userId = verifyOtp.body.userId;
-
-                const hashedPassword = hashService.hashPassword(password);
-
                 const user = await Users.findOneAndUpdate({_id: ObjectId(userId)}, {
+                    name: name,
                     gender: gender,
+                    email: email,
                     dob: dob,
                     occupation: occupation,
-                    password: hashedPassword,
+                    isActivated: true,
+                    // password: await hashService.hashPassword(password),
                 }, {
                     new: true // returns the newly updated document
                 })
-                console.log(user);
+                return res.status(200).json({user: user, message: "User Registered"});
             }
         })
     }
@@ -225,9 +250,13 @@ class AuthController {
     
         Users.findOne({ email: userCred.email })
         .then((user) => {
+            console.log(user);
+            
             if(user !== null) {
                 bcryptjs.compare(userCred.password, user.password, (err, status) => {
-                    if(status === true) {
+                    console.log(status);
+                    
+                    if(status == true) {
                         jwt.sign(userCred, SECRET_KEY, (err, token) => {
                             if(err === null) {
                                 res.json({message: `Welcome user`, token: token});
@@ -238,12 +267,24 @@ class AuthController {
                     }
                 })
             } else {
-                res.send({message: "Username not found"});
+                res.send({message: "User not found"});
             }
         }).catch((err) => {
             console.log(err);
             res.send({message: "user not found!!"});
         })
+    }
+
+    async logout(req, res) {
+        const { refreshToken } = req.cookies;
+
+        await tokenService.removeToken(refreshToken);
+
+        // 3. delete that cookies from DB
+        res.clearCookie('refreshToken'); // res has this clearCookie() method inside which we need to pass the key of the cookie(here refreshToken and accessToken) to clear/delete the cookkie
+        res.clearCookie('accessToken');
+    
+        res.json({ user: null, auth: false }); // now we will send the user as null(since no user) and make the auth as false (not authenticted);
     }
 }
 
