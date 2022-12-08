@@ -12,7 +12,7 @@ import {MessageService} from 'primeng/api';
   providers: [CookieService,MessageService]
 })
 export class RiderListComponent implements OnInit {
-  displayModal: boolean= true;
+  displayModal: boolean= false;
 
   constructor(private messageService: MessageService, private fb: FormBuilder,private router: Router,private cookieService: CookieService) { }
 
