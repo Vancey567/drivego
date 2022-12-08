@@ -1,6 +1,16 @@
 const VehiclesModel = require('../models/vehicle-model');
-
+var ObjectId = require('mongoose').Types.ObjectId; 
 class VehicleService {
+    async findAllVehicle() {
+        try {
+            const vehicles = await VehiclesModel.find();
+            return vehicles;
+        } catch(err) {
+            console.log(err);
+            throw new Error(err.message);
+        }
+    }
+
     async findVehicleById(vehicleId) {
         try {
             const vehicles = await VehiclesModel.findById(vehicleId);
@@ -21,10 +31,10 @@ class VehicleService {
         }
     }
 
-    async findAllVehicle() {
+    async findOwnersVehicles(owner) {
         try {
-            const vehicles = await VehiclesModel.find();
-            return vehicles;
+            // console.log(owner);            
+            return await VehiclesModel.find({owner: ObjectId(owner)});
         } catch(err) {
             console.log(err);
             throw new Error(err.message);

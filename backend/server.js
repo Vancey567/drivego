@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
@@ -9,6 +10,8 @@ const DbConnect = require('./database');
 const PORT = process.env.PORT;
 
 app.use(express.json({limit: "8mb"}));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(cookieParser());
 DbConnect();
 

@@ -6,7 +6,7 @@ class HashService {
        return crypto.createHmac('sha256', process.env.HASH_SECRET).update(data).digest('hex');
     }
 
-    async hashPassword(password) { 
+    async hashPassword(password) {
          bcryptjs.genSalt(10, async (err, salt) => {
             if(err === null) {
                 bcryptjs.hash(password, salt, (err, hashedPassword) => {                   

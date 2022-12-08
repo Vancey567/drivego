@@ -14,9 +14,10 @@ class UserController {
         }
     }
 
-    async getUserDetail(req, res, email) {
+    async getUserDetail(req, res) {
+        const { id } = req.params;
         try {
-            const user = await userService.getUserDetail(email);
+            const user = await userService.findUser(id);
             return res.status(200).json({user: user});
         } catch (err) {
             console.log(err);
