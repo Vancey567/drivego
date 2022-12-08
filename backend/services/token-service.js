@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
+const refreshModel = require('../models/refresh-model');
 const accessTokenSecret = process.env.JWT_ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.JWT_REFRESH_TOKEN_SECRET;
-const refreshModel = require('../models/refresh-model');
+const resetTokenSecret = process.env.JWT_RESET_TOKEN_SECRET;
 class TokenService {
     generateTokens(payload) {
         const accessToken = jwt.sign(payload, accessTokenSecret, {
@@ -12,6 +13,13 @@ class TokenService {
             expiresIn: '1y',
         });
         return { accessToken, refreshToken };
+    }
+
+    generateResetToken(payload) {
+        const resetToken = jwt.sign(payload, resetTokenSecret, {
+            expiresIn: '1h',
+        })
+        return resetToken;
     }
 
     async storeRefreshToken(token, userId) {

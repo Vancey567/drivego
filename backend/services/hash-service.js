@@ -9,9 +9,7 @@ class HashService {
     hashPassword(password) { 
         bcryptjs.genSalt(10, (err, salt) => {
             if(err === null) {
-                bcryptjs.hash(password, salt, (err, hashedPassword) => {
-                    console.log(password);
-                    
+                bcryptjs.hash(password, salt, (err, hashedPassword) => {                   
                     // password = hashedPassword;
 
                     // const userObj = new Users({

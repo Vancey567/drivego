@@ -11,12 +11,16 @@ const tokenService = require('../services/token-service');
 const UserDto = require('../dtos/user-dtos');
 
 const SECRET_KEY = process.env.SECRET_KEY;
+let phoneRegex = /^0?[6-9][\d]{9}$/;
 class AuthController {
     async sendOtp(req, res) {
         const { phone } = req.body;
-        
         if(!phone) {
             res.status(400).json({message: 'Phone number is required!'});
+        }
+
+        if(!phone.match(phoneRegex)) {
+            res.status(400).json({message: 'Invalid Phone Number!'});
         }
 
         const otp = await otpService.generateOtp();
@@ -44,6 +48,9 @@ class AuthController {
         const { otp, hash, phone, name, email } = req.body;
         if(!otp || !hash || !phone) {
             res.status(400).json({message: 'All fields are required'});
+        }
+        if(!phone.match(regex)) {
+            res.status(400).json({message: 'Invalid Phone Number!'});
         }
         const [ hashedOtp, expires ] = hash.split('.'); // split expires from hash
         if(Date.now() > +expires) {
@@ -157,7 +164,6 @@ class AuthController {
     async logout(req, res) {
         const { refreshToken } = req.cookies;
 
-        // 2. delete that refreshToken from DB
         await tokenService.removeToken(refreshToken);
 
         // 3. delete that cookies from DB
@@ -169,14 +175,14 @@ class AuthController {
 
 
     async register(req, res) {
-        const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         let {name, gender, dob, email, phone, occupation, password} = req.body;
 
         if(!name || !gender || !dob || !email || !phone || !password) {
             return res.json({error: "All fields are required!!"});
         }
 
-        if(!email.match(regex)) {
+        if(!email.match(emailRegex)) {
             return res.json({error: "Email format incorrect!!"});
         }
 
@@ -186,7 +192,7 @@ class AuthController {
             } else if(err) {
                 return res.json({error: "Something went wrong!"});
             } else {
-                let sendOtpRes = await supertest(`http://${req.get("host")}`).post('/sendotp').send({ phone });
+                // let sendOtpRes = await supertest(`http://${req.get("host")}`).post('/sendotp').send({ phone });
 
                 const someData = {
                     otp: sendOtpRes.body.otp, 
@@ -196,7 +202,7 @@ class AuthController {
                     email 
                 }
 
-                let verifyOtp = await supertest(`http://${req.get("host")}`).post('/verifyotp').send(someData);
+                // let verifyOtp = await supertest(`http://${req.get("host")}`).post('/verifyotp').send(someData);
                 const userId = verifyOtp.body.userId;
 
                 const hashedPassword = hashService.hashPassword(password);
