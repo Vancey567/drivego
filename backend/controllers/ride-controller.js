@@ -3,7 +3,7 @@ const rideService = require('../services/ride-service');
 const tripService = require('../services/trip-service');
 
 class RideController {
-    async createRide(req, res, params) {
+    async createRide(req, res) {
         // const { rider, extraPerson, source, destinati, preferredTripTimeon, pickup, preferredVehicle, preferredSeatType, offeredFare, luggage } = req.body;
         const {trip, ride, paymentType} = req.body;
         
