@@ -59,8 +59,8 @@ export class StartRideComponent implements OnInit {
       // ajax.subscribe(
       //   (response: any) => {
       //     if(response.isLogged == true){
-      //       // this.cookieService.set('mlo-test',response.token,1,undefined,undefined,true,'Strict');
-      //       this.cookieService.set('isRight',btoa(response.isRight),1,undefined,undefined,true,'Strict');
+      //       // this.cookieService.set('mlo-test',response.token,365,undefined,undefined,true,'Strict');
+      //       this.cookieService.set('isRight',btoa(response.isRight),365,undefined,undefined,true,'Strict');
 
       //       // check cookies is store or not
 

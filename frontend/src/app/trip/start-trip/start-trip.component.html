@@ -44,27 +44,49 @@
     </div>
 </div>
 
-<p-dialog header="Register Vehicle" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+<p-dialog #dialog header="Register Vehicle" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
     [draggable]="false" [resizable]="false">
     <form class="" (submit)="registerVehicle()" [formGroup]="registerVehicleForm">
         <div class="p-inputtext-sm w-full mb-4">
-            <label for="vehicleNo"d>Vehicle No:</label><br>
-            <input type="text" for="vehicleNo" pInputText class="w-full mt-2" placeholder="Enter your vehicle no" formControlName="vehicleNo">
+            <label for="company">Car Maker:</label><br>
+            <input type="text" for="company" pInputText class="w-full mt-2" placeholder="Ex. Suzuki" formControlName="company">
+            <small class="p-invalid" style="color:red" *ngIf="company.hasError('required') && company.touched">This field is required!</small>
         </div>
 
         <div class="p-inputtext-sm w-full mb-4">
-            <label for="model"d>Model:</label><br>
-            <input type="text" for="model" pInputText class="w-full mt-2" placeholder="Enter your model" formControlName="model">
+            <label for="model">Model:</label><br>
+            <input type="text" for="model" pInputText class="w-full mt-2" placeholder="Ex. XUV" formControlName="model">
+            <small class="p-invalid" style="color:red" *ngIf="models.hasError('required') && models.touched">This field is required!</small>
+        </div>
+
+        <div class="p-inputtext-sm w-full mb-4">
+            <label for="type">Type:</label><br>
+            <p-dropdown appendTo="dialog" styleClass="w-full mt-2" [options]="vehicleType" optionLabel="name" optionValue="value" placeholder="Enter vehicle type" formControlName="type"></p-dropdown>
+            <small class="p-invalid" style="color:red" *ngIf="type.hasError('required') && type.touched">This field is required!</small>
+        </div>
+
+        <div class="p-inputtext-sm w-full mb-4">
+            <label for="vehicleNumber">Vehicle Number:</label><br>
+            <input type="text" for="vehicleNumber" pInputText class="w-full mt-2" placeholder="Enter your vehicle no" formControlName="vehicleNumber">
+            <small class="p-invalid" style="color:red" *ngIf="vehicleNumber.hasError('required') && vehicleNumber.touched">This field is required!</small>
         </div>
 
         <div class="p-inputtext-sm w-full mb-4">
             <label for="capacity"d>Capacity:</label><br>
             <input type="number" for="capacity" pInputText class="w-full mt-2" placeholder="Enter capacity" formControlName="capacity">
+            <small class="p-invalid" style="color:red" *ngIf="capacity.hasError('required') && capacity.touched">This field is required!</small>
         </div>
         
         <div class="p-inputtext-sm w-full mb-4">
             <label for="color"d>Color:</label><br>
             <input type="text" for="color" pInputText class="w-full mt-2" placeholder="Enter color" formControlName="color">
+            <small class="p-invalid" style="color:red" *ngIf="color.hasError('required') && color.touched">This field is required!</small>
+        </div>
+        
+        <div class="p-inputtext-sm w-full mb-4">
+            <label for="vehicleImg"d>Vehicle Image:</label><br>
+            <input type="file" for="vehicleImg" pInputText class="w-full mt-2" placeholder="Enter vehicle image" formControlName="vehicleImg">
+            <small class="p-invalid" style="color:red" *ngIf="vehicleImg.hasError('required') && vehicleImg.touched">This field is required!</small>
         </div>
 
         <div class="flex justify-content-center align-items-center ">
