@@ -31,9 +31,7 @@ class VehicleController {
 
     async allVehicles(req, res) {
         try {
-            console.log("All")
             const vehicles = await VehicleService.findAllVehicle();
-            
             if(!vehicles || vehicles.length === 0) {
                 return res.status(404).json({message: "No Vehicle Found, Register One!!"});
             }
@@ -44,16 +42,14 @@ class VehicleController {
         }
     }
 
-    async ownersVehicles(req, res) {
-        // const id = req.query.id;
-        // console.log(id);    
-        const {ownerId} = req.body;    
+    async ownersVehicles(req, res) {   
+        const {ownerId} = req.body;  
         try {
-            const vehicles = await VehicleService.findOwnersVehicles({owner: ownerId});
+            const vehicles = await VehicleService.findOwnersVehicles(ownerId);
             return res.status(200).json({vehicles: vehicles});
         } catch(err) {
             console.log(err);
-            return res.status(500).json({message: "Problem finding vehicles owned by You!!"});
+            return res.status(500).json({message: "No Vehicles Found, Register One to Create the Trip!!"});
         }
     }    
 

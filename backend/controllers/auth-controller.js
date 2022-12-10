@@ -8,6 +8,7 @@ const otpService = require('../services/otp-service');
 const hashService = require('../services/hash-service');
 const userService = require('../services/user-service');
 const tokenService = require('../services/token-service');
+const ReferralService = require('../services/referral-service');
 const UserDto = require('../dtos/user-dtos');
 
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -16,11 +17,17 @@ class AuthController {
     async sendOtp(req, res) {
         const { phone } = req.body;
         if(!phone) {
-            res.status(400).json({message: 'Phone number is required!'});
+            return res.status(400).json({message: 'Phone number is required!'});
         }
 
         if(!phone.toString().match(phoneRegex)) {
-            res.status(400).json({message: 'Invalid Phone Number!'});
+            return res.status(400).json({message: 'Invalid Phone Number!'});
+        }
+
+        // Check if Reffered
+        const exist = await ReferralService.referralAlreadyExists(phone);
+        if(exist === false) {
+            return res.status(400).json({message: `${phone} is not reffered, Ask someone for referral!!`});
         }
 
         const otp = await otpService.generateOtp();
@@ -32,7 +39,7 @@ class AuthController {
         const hash = hashService.hashOtp(data);
 
         try {
-            // await otpService.sendBySms(phone, otp); // Pass phone and normal otp for sending to the user not the hashed otp
+            await otpService.sendBySms(phone, otp); // Pass phone and normal otp for sending to the user not the hashed otp
             return res.json({
                 hash: `${hash}.${expires}`, // We will send a hash. The expires time will be extracted
                 phone: phone,
@@ -40,12 +47,11 @@ class AuthController {
             });
         } catch(err) {
             console.log(err);
-            res.status(500).json({message: 'Message sending failed'});
+            return res.status(500).json({message: 'Message sending failed'});
         }
     }
     
     async verifyOtp(req, res) {
-        // const { otp, hash, phone, name, email } = req.body;
         const { otp, hash, phone} = req.body;
         if(!otp || !hash || !phone) {
             res.status(400).json({message: 'All fields are required'});
@@ -104,7 +110,7 @@ class AuthController {
         // Get refresh token from header
         const {  refreshToken: refreshTokenFromCookie } = req.cookies;
         console.log("Refresh Token", refreshTokenFromCookie);
-
+        
         // Check if token is valid
         let userData;
         try {
@@ -161,56 +167,6 @@ class AuthController {
         res.json({ user: userDto, auth: true });
     }
 
-    // async register(req, res) {
-    //     const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    //     let {name, gender, dob, email, phone, occupation, password} = req.body;
-    //     console.log(password);
-        
-
-    //     if(!name || !gender || !dob || !email || !phone || !password) {
-    //         return res.json({error: "All fields are required!!"});
-    //     }
-
-    //     if(!email.match(emailRegex)) {
-    //         return res.json({error: "Email format incorrect!!"});
-    //     }
-
-    //     Users.exists({ email: email }, async (err, user) => {
-    //         if (user) {
-    //             return res.json({error: "User already exists!"});
-    //         } else if(err) {
-    //             return res.json({error: "Something went wrong!"});
-    //         } else {
-    //             let sendOtpRes = await supertest(`http://${req.get("host")}`).post('/sendotp').send({ phone });
-
-    //             const otpData = {
-    //                 otp: sendOtpRes.body.otp, 
-    //                 hash: sendOtpRes.body.hash,
-    //                 phone: sendOtpRes.body.phone,
-    //                 name, 
-    //                 email 
-    //             }
-
-    //             let verifyOtp = await supertest(`http://${req.get("host")}`).post('/verifyotp').send(otpData);               
-    //             const userId = verifyOtp.body.user.id;
-
-    //             // const hashedPassword = await hashService.hashPassword(password);
-                
-    //             // console.log("hashedPassword", hashedPassword);
-
-    //             const user = await Users.findOneAndUpdate({_id: ObjectId(userId)}, {
-    //                 gender: gender,
-    //                 dob: dob,
-    //                 occupation: occupation,
-    //                 // password: password,
-    //                 password: await hashService.hashPassword(password),
-    //             }, {
-    //                 new: true // returns the newly updated document
-    //             })
-    //             return res.status(200).json({user: user, message: "User Registered"});
-    //         }
-    //     })
-    // }
     async register(req, res) {
         const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         let {userId, name, gender, dob, email, occupation} = req.body;      
