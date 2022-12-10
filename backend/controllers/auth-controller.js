@@ -12,7 +12,8 @@ const ReferralService = require('../services/referral-service');
 const UserDto = require('../dtos/user-dtos');
 
 const SECRET_KEY = process.env.SECRET_KEY;
-let phoneRegex = /^0?[6-9][\d]{9}$/;
+// let phoneRegex = /^0?[6-9][\d]{9}$/;
+let phoneRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
 class AuthController {
     async sendOtp(req, res) {
         const { phone } = req.body;
@@ -20,7 +21,7 @@ class AuthController {
             return res.status(400).json({message: 'Phone number is required!'});
         }
 
-        if(!phone.toString().match(phoneRegex)) {
+        if(!phone.match(phoneRegex)) {
             return res.status(400).json({message: 'Invalid Phone Number!'});
         }
 
@@ -39,7 +40,7 @@ class AuthController {
         const hash = hashService.hashOtp(data);
 
         try {
-            await otpService.sendBySms(phone, otp); // Pass phone and normal otp for sending to the user not the hashed otp
+            // await otpService.sendBySms(phone, otp); // Pass phone and normal otp for sending to the user not the hashed otp
             return res.json({
                 hash: `${hash}.${expires}`, // We will send a hash. The expires time will be extracted
                 phone: phone,
@@ -56,7 +57,7 @@ class AuthController {
         if(!otp || !hash || !phone) {
             res.status(400).json({message: 'All fields are required'});
         }
-        if(!phone.toString().match(phoneRegex)) {
+        if(!phone.match(phoneRegex)) {
             res.status(400).json({message: 'Invalid Phone Number!'});
         }
         const [ hashedOtp, expires ] = hash.split('.'); // split expires from hash
