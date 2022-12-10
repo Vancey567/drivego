@@ -1,7 +1,10 @@
 // const vehicleService = require('../services/vehicle-service');
-// const tripService = require('../services/trip-service');
+const TripService = require('../services/trip-service');
+const UserService = require('../services/user-service');
 // const authController = require('./auth-controller');
 const DriverService = require('../services/driver-service');
+const RiderService = require('../services/ride-service');
+const OtpService = require('../services/otp-service');
 
 const DriverModel = require('../models/driver-model');
 
@@ -9,11 +12,6 @@ class TripController {
     async createTrip(req, res) {
         const {driver} = req.body;
 
-        // if(driver.isActivated) {
-        //     await tripService.generateTrip(req.body);
-        // } else {
-        //     await tripService.activateDriver(req.body);
-        // }
         try {            
             const trip = await DriverService.driverOccupied(driver);
             if(trip) {
@@ -21,7 +19,6 @@ class TripController {
             }
             
             try {
-                // const vDto = new tripDto({ driver, vehicle, rider, coRiders, availableSeats, seatType, source, destination, pickup, expectedStartTime, startTime, endTime, fare, paymentType, status});
                 const savedtrip = await DriverService.saveTrip(req.body);
                 res.status(200).json({message: `Trip Created Successfully!!`, savedtrip});
             } catch(err) {
@@ -35,8 +32,37 @@ class TripController {
     }
 
     async findTrip(req, res) {
-        const {rider, } = req.body;
+        const {rider, source, destination, time, seats} = req.body;
         
+        try {
+            const driver = await TripService.findDriver(source, destination, time, seats);
+            if(!driver || !driver.length === 0) {
+                return res.status(404).json({message: "Sorry, No Driver Found for Your Destination"});
+            }
+            try {
+                const trip = await TripService.saveMatchedTrip(rider, driver);
+                try {
+                    const otp = OtpService.generateOtp();
+                    const user = await UserService.findUserDetails(rider);
+                    await OtpService.sendTripOtpBySms(user.phone, otp);
+
+                    // Delete Data from Rider and Driver Models
+                    const deletedDriver = await DriverService.deleteDriverTrip(driver);
+                    const deletedRider = await RiderService.deleteRiderTrip(driver);
+                    console.log(deletedDriver, deletedRider);
+                } catch(err) {
+                    console.log(err);
+                    return res.status(500).json({message: "Problem sending OTP!!"});
+                }
+                return res.status(200).json({trip, message: "Trip Created successfully"});
+            } catch(err) {
+                console.log(err);
+                return res.status(500).json({message: "Problem creating the trip!!"});
+            }
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({message: "Problem finding trip for your!!"});
+        }
     }
 
     async createRide(req, res) {

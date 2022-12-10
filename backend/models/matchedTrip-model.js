@@ -8,10 +8,11 @@ const matchedTripSchema = new Schema ({
     source: {type: String, required: true},
     destination: {type: String, required: true},
     startTime: {type: Date, required: false},
-    endTime: {type: Date, required: false},
+    // endTime: {type: Date, required: false},
     fare: {type: String, required: true},
-    paymentType: {type: String, enum:['Cash', 'Card', 'UPI', 'NetBanking'], required: true},
-    status: {type: String, required: true},
+    paymentType: {type: String, enum:['Cash', 'Card', 'UPI', 'NetBanking'], default: "Cash", required: true},
+    paid: {type: Boolean, default: false, required: true},
+    status: {type: String, enum: ['not-started', 'in-progress', 'completed'], default: 'not-started', required: true},
 }, { timestamps: true })
 
 module.exports = mongoose.model('Trips', matchedTripSchema);

@@ -1,44 +1,27 @@
-const Trips = require('../models/trip-model');
+const MatchedTripModel = require('../models/matchedTrip-model');
+const DriverModel = require('../models/driver-model');
 
 class tripService {
-    // async findTrip({source, destination, time, seats}) {
-    //     try {
-    //         const trip = await Trips.find({source: source, destination: destination});
-    //         return trip;
-    //     } catch (err) {
-    //         console.log(err);
-    //         throw new Error(err);
-    //     }
-    // }
-
-    async findTrip({ source, destination, time, seats }) {
+    async findDriver(source, destination, time, seats) {
         try {
-            const trip = await Trips.find({ 
-                sourceLat: source.lat,
-                sourceLong: source.long,
-                destinationLat: destination.lat,
-                destinationLong: destination.long,
-                time: time
+            const driver = await DriverModel.find({ 
+                sourceLat: {$gte: source[0] - 0.2000, $lte: source[0] + 0.2000},
+                sourceLong: {$gte: source[1]- 0.2000, $lte: source[1] + 0.2000},
+                destinationLat: {$gte: destination[0] - 0.2000, $lte: destination[0] + 0.2000},
+                destinationLong: {$gte: destination[1] - 0.2000, $lte: destination[1] + 0.2000},
+                time: {$gte: time - 3600, $lte: time + 3600},
+                seats: {$lte: seats}
             });
-            
-            return trip;
+            return driver;
         } catch (err) {
             console.log(err);
             throw new Error(err);
         }
     }
 
-    async generateTrip({ }) {
-
-    }
-
-    async activateDriver() {
-
-    }
-
-    async saveTrip(data) {
+    async saveMatchedTrip(rider, driver) {
         try {
-            const trip = await Trips.create(data);
+            const trip = await (await (await MatchedTripModel.create({rider: rider, driver: driver})).populate('rider')).populate('driver');
             return trip;
         } catch (err) {
             console.log(err);

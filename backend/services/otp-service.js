@@ -28,6 +28,14 @@ class OtpService {
             body: `You have been referred to join DriveGo, Use your ${phone} to Register.`,
         });
     }
+    
+    async sendTripOtpBySms(phone, otp) {
+        return await twilio.messages.create({
+            to: phone,
+            from: process.env.SMS_FROM_NUMBER,
+            body: `Your DriveGo Trip otp is ${otp}.`,
+        });
+    }
 
     async verifyOtp(hashedOtp, newData) {
         let computedHash = hashService.hashOtp(newData);

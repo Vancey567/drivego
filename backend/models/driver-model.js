@@ -10,6 +10,7 @@ const driverSchema = new Schema ({
     destination: {type: String, required: true},
     expectedStartTime: {type: Date, required: true},
     fare: {type: String, required: true},
+    status: {type: String, enum: ['not-matched', 'in-progress', 'completed']},
 }, { timestamps: true })
 
 module.exports = mongoose.model('Driver', driverSchema);

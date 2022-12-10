@@ -21,6 +21,16 @@ class driverService {
             throw new Error(err.message);
         }
     }
+
+    async deleteDriverTrip(driverId) {
+        try {
+            const deletedDriver = await driverModel.findByIdAndDelete(driverId);
+            return deletedDriver;
+        } catch (err) {
+            console.log(err);
+            throw new Error(err.message);
+        }
+    }
 }
 
 module.exports = new driverService();

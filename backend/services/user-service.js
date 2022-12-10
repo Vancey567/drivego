@@ -6,6 +6,11 @@ class UserService {
         return user;
     }
 
+    async findUserDetails(filter) {
+        const user = await UserModel.findById(filter);
+        return user;
+    }
+
     async createUser(data) { // User's data 
         const user = await UserModel.create(data);
         return user;

@@ -2,7 +2,6 @@ const ReferralService = require('../services/referral-Service');
 const OtpService = require('../services/Otp-Service');
 
 let phoneRegex = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
-
 class ReferralController {
     async generateReferral(req, res) {
         const {userId, referredPhone} = req.body;

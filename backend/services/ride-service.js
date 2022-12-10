@@ -1,12 +1,12 @@
-const tripModel = require('../models/trip-model');
+const TripModel = require('../models/trip-model');
 const matchedTrip = require('../models/matchedTrip-model');
-const riderModel = require('../models/rider-model');
+const RriderModel = require('../models/rider-model');
 var ObjectId = require('mongoose').Types.ObjectId; 
 
 class rideService {
     async findDriver({source, destination, time, seats}) {
         try {
-            const driver = await tripModel.findOne({source, destination, time, seats});
+            const driver = await TripModel.findOne({source, destination, time, seats});
             return driver;
         } catch (err) {
             console.log(err);
@@ -16,7 +16,7 @@ class rideService {
 
     async createRide({rider, extraPerson, source, destination, preferredTripTime, offeredFare, luggage}) {
         try {
-            return await riderModel.create({rider, extraPerson, source, destination, preferredTripTime, offeredFare, luggage});
+            return await RriderModel.create({rider, extraPerson, source, destination, preferredTripTime, offeredFare, luggage});
         } catch(err) {
             console.log(err);
             throw new Error(err.message);
@@ -31,6 +31,16 @@ class rideService {
         } catch (err) {
             console.log(err);
             throw new Error(err.message); 
+        }
+    }
+
+    async deleteRiderTrip(riderId) {
+        try {
+            const deletedRider = await RriderModel.findByIdAndDelete(riderId);
+            return deletedRider;
+        } catch (err) {
+            console.log(err);
+            throw new Error(err.message);
         }
     }
 }
