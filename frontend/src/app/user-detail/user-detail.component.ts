@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {FormGroup,FormBuilder,Validators,NG_VALIDATORS} from "@angular/forms";
-// import {LoginService} from '../../services/login.service';
+import {UserDetailsService} from './../services/user-details.service';
 import {Router} from '@angular/router';
 import {CookieService} from 'ngx-cookie-service';
 import {MessageService} from 'primeng/api';
@@ -14,17 +14,26 @@ import {MessageService} from 'primeng/api';
 export class UserDetailComponent implements OnInit {
   displayModal: boolean= false;
   public userDetailsForm: any;
+  public userGender: any[] = [
+    {name: 'Male', value: 'Male'},
+    {name: 'Female', value: 'Female'},
+  ];
   public userDetailsBtn: boolean= false;
 
-  constructor(private messageService: MessageService, private fb: FormBuilder,private router: Router,private cookieService: CookieService) { }
+  constructor(private userApi: UserDetailsService, private messageService: MessageService, private fb: FormBuilder,private router: Router,private cookieService: CookieService) { }
 
   ngOnInit(): void {
-    this.displayModal = true;
+    if(this.cookieService.get('isActive') == "true"){
+      this.displayModal = false;
+    }else{
+      this.displayModal = true;
+    }
     this.userDetailsForm = this.fb.group(
       {
         name: ['',[Validators.required]],
         email: ['',[Validators.required]],
         dob: ['',[Validators.required]],
+        occupation: ['',[Validators.required]],
         gender: ['',[Validators.required]]
       }
     );
@@ -42,6 +51,10 @@ export class UserDetailComponent implements OnInit {
     return this.userDetailsForm.get('dob');
   }
 
+  get occupation(): any {
+    return this.userDetailsForm.get('occupation');
+  }
+
   get gender(): any {
     return this.userDetailsForm.get('gender');
   }
@@ -49,40 +62,40 @@ export class UserDetailComponent implements OnInit {
   userDetails():void{
     this.userDetailsBtn = true;
     if(this.userDetailsForm.valid) {
-      let formdata: any = new FormData();
-      for(let key in this.userDetailsForm.value) {
-        formdata.append(key,this.userDetailsForm.value[key]);
-      }
-      // const ajax = this.login_api.loginUser(this.formdata);
-      // ajax.subscribe(
-      //   (response: any) => {
-      //     if(response.isLogged == true){
-      //       // this.cookieService.set('mlo-test',response.token,1,undefined,undefined,true,'Strict');
-      //       this.cookieService.set('isRight',btoa(response.isRight),1,undefined,undefined,true,'Strict');
-
-      //       // check cookies is store or not
-
-      //       this.showDialog('Successfully Login','Success');
-      //       setTimeout(() => {
-      //         this.router.navigateByUrl("/dashboard");
-      //       },1000);
-      //     }
-      //     else{
-      //       this.showDialog("Unable to login! Please try again later.",'Warning');
-      //     }
+      let formdata: any = {
+        "userId": this.cookieService.get('userId'),
+        "name": this.name.value,
+        "gender": this.gender.value,
+        "dob": this.dob.value,
+        "email": this.email.value,
+        "occupation": this.occupation.value
+      };
+      const ajax = this.userApi.userDetails(formdata);
+      ajax.subscribe(
+        (response: any) => {
+          console.log(response);
           
-      //     this.userDetailsBtn = false;
-      //   },
-      //   (error: any) => {
-      //     // 
-      //     this.showDialog(error,'Warning');
-      //     this.userDetailsBtn = false;
-      //   }
-      // );
-      this.messageService.add({severity:'success', summary:'Success', detail:'User Details Added Successfully'});
-      this.displayModal = false;
-      this.userDetailsBtn = false;
-      formdata = new FormData();
+          if(response.message == "User Registered"){
+            this.cookieService.set("dob",response.user.dob,365,undefined,undefined,true,'Strict');
+            this.cookieService.set("isActive",response.user.isActivated,365,undefined,undefined,true,'Strict');
+            this.cookieService.set("email",response.user.email,365,undefined,undefined,true,'Strict');
+            this.cookieService.set("gender",response.user.gender,365,undefined,undefined,true,'Strict');
+            this.cookieService.set("name",response.user.name,365,undefined,undefined,true,'Strict');
+            this.cookieService.set("occupation",response.user.occupation,365,undefined,undefined,true,'Strict');
+            this.messageService.add({severity:'success', summary:'Success', detail:'User Details Added Successfully'});
+            this.displayModal = false;
+          }
+          else{
+            this.messageService.add({severity:'error', summary:'Error', detail:"Something went wrong! Please try again later."});
+          }
+          this.userDetailsBtn = false;
+        },
+        (error: any) => {
+          this.messageService.add({severity:'error', summary:'Error', detail:error});
+          console.log(error);
+          this.userDetailsBtn = false;
+        }
+      );
     }
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {FormGroup,FormBuilder,Validators,NG_VALIDATORS} from "@angular/forms";
-// import {LoginService} from '../../services/login.service';
+import {LoginService} from './../services/login.service';
 import {Router} from '@angular/router';
 import {CookieService} from 'ngx-cookie-service';
 import {MessageService} from 'primeng/api';
@@ -19,14 +19,16 @@ export class LoginComponent implements OnInit {
   public verifyOTPForm: any;
   public verifyOTPBtn: boolean= false;
   public OTPFormDisplay: boolean= false;
+  public respHash:any;
+  public resPhone:any;
 
-  constructor(private messageService: MessageService, private fb: FormBuilder,private router: Router,private cookieService: CookieService) { }
+  constructor(private login_api: LoginService, private messageService: MessageService, private fb: FormBuilder,private router: Router,private cookieService: CookieService) { }
 
   ngOnInit(): void {
     this.OTPFormDisplay = false;
     this.loginForm = this.fb.group(
       {
-        mobile_number: ['',[Validators.required]]
+        phone: ['',[Validators.required]]
       }
     );
 
@@ -37,94 +39,81 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  get mobile_number(): any {
-    return this.loginForm.get('mobile_number');
+  get phone(): any {
+    return this.loginForm.get('phone');
   }
 
   get verifyOTPs(): any {
-    return this.verifyOTPForm.get('verifyOTPs');
+    return this.verifyOTPForm.get('verifyOTP');
   }
 
   login():void{
     this.loginBtn = true;
-    if(this.loginForm.valid) {
-      let formdata: any = new FormData();
-      for(let key in this.loginForm.value) {
-        formdata.append(key,this.loginForm.value[key]);
-      }
-      // const ajax = this.login_api.loginUser(this.formdata);
-      // ajax.subscribe(
-      //   (response: any) => {
-      //     if(response.isLogged == true){
-      //       // this.cookieService.set('mlo-test',response.token,1,undefined,undefined,true,'Strict');
-      //       this.cookieService.set('isRight',btoa(response.isRight),1,undefined,undefined,true,'Strict');
-
-      //       // check cookies is store or not
-
-      //       this.showDialog('Successfully Login','Success');
-      //       setTimeout(() => {
-      //         this.router.navigateByUrl("/dashboard");
-      //       },1000);
-      //     }
-      //     else{
-      //       this.showDialog("Unable to login! Please try again later.",'Warning');
-      //     }
+    if(this.loginForm.valid) {  
+      const ajax = this.login_api.loginUser(this.loginForm.value);
+      ajax.subscribe(
+        (response: any) => {
+          console.log(response);
           
-      //     this.loginBtn = false;
-      //   },
-      //   (error: any) => {
-      //     // 
-      //     this.showDialog(error,'Warning');
-      //     this.loginBtn = false;
-      //   }
-      // );
-      this.messageService.add({severity:'success', summary:'Success', detail:'OTP Sent Successfully'});
-      this.OTPFormDisplay = true;
-      this.loginBtn = false;
-      formdata = new FormData();
+          if(response.hash){
+            this.respHash = response.hash;
+            this.resPhone = response.phone;
+            this.messageService.add({severity:'success', summary:'Success', detail:'OTP Sent Successfully. OTP is: '+response.otp});
+            this.OTPFormDisplay = true;
+            this.loginBtn = false;
+          }
+          else{
+            this.messageService.add({severity:'error', summary:'Error', detail:"Something went wrong! Please try again later."});
+            this.loginBtn = false;
+          }
+          
+          this.loginBtn = false;
+        },
+        (error: any) => {
+          this.messageService.add({severity:'error', summary:'Error', detail:error});
+          console.log(error);
+          this.loginBtn = false;
+        }
+      );
     }
   }
 
   verifyOTP():void{
     this.verifyOTPBtn = true;
     if(this.verifyOTPForm.valid) {
-      let formsdata: any = new FormData();
-      for(let key in this.verifyOTPForm.value) {
-        formsdata.append(key,this.verifyOTPForm.value[key]);
-      }
-      // const ajax = this.login_api.loginUser(this.formdata);
-      // ajax.subscribe(
-      //   (response: any) => {
-      //     if(response.isLogged == true){
-      //       // this.cookieService.set('mlo-test',response.token,1,undefined,undefined,true,'Strict');
-      //       this.cookieService.set('isRight',btoa(response.isRight),1,undefined,undefined,true,'Strict');
-
-      //       // check cookies is store or not
-
-      //       this.showDialog('Successfully Login','Success');
-      //       setTimeout(() => {
-      //         this.router.navigateByUrl("/dashboard");
-      //       },1000);
-      //     }
-      //     else{
-      //       this.showDialog("Unable to login! Please try again later.",'Warning');
-      //     }
+      let formdata: any = {
+        "otp": this.verifyOTPs.value,
+        "hash": this.respHash,
+        "phone": this.resPhone
+      };
+      const ajax = this.login_api.verifyOTP(formdata);
+      ajax.subscribe(
+        (response: any) => {
+          console.log(response);
           
-      //     this.loginBtn = false;
-      //   },
-      //   (error: any) => {
-      //     // 
-      //     this.showDialog(error,'Warning');
-      //     this.loginBtn = false;
-      //   }
-      // );
-      this.messageService.add({severity:'success', summary:'Success', detail:'Login Successfully'});
-      setTimeout(() => {
-        this.router.navigateByUrl("/user-details");
-        this.OTPFormDisplay = false;
-        this.verifyOTPBtn = false;
-      },1000);
-      formsdata = new FormData();
+          if(response.otpValid){
+            this.cookieService.set("userId",response.user.id,365,undefined,undefined,true,'Strict');
+            this.cookieService.set("isActive",response.user.isActivated,365,undefined,undefined,true,'Strict');
+            this.cookieService.set("userPhone",response.user.phone,365,undefined,undefined,true,'Strict');
+            this.messageService.add({severity:'success', summary:'Success', detail:'Login Successfully'});
+            setTimeout(() => {
+              this.router.navigateByUrl("/user-details");
+              this.OTPFormDisplay = false;
+              this.verifyOTPBtn = false;
+            },1000);
+            this.OTPFormDisplay = false;
+          }
+          else{
+            this.messageService.add({severity:'error', summary:'Error', detail:"Something went wrong! Please try again later."});
+          }
+          this.verifyOTPBtn = false;
+        },
+        (error: any) => {
+          this.messageService.add({severity:'error', summary:'Error', detail:error});
+          console.log(error);
+          this.verifyOTPBtn = false;
+        }
+      );
     }
   }
 
