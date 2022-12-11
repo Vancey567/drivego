@@ -26,8 +26,7 @@ export class StartRideComponent implements OnInit {
       {
         source: ['',[Validators.required]],
         destination: ['',[Validators.required]],
-        startDate: ['',[Validators.required]],
-        startTime: ['',[Validators.required]]
+        startDate: ['',[Validators.required]]
       }
     );
   }
@@ -45,10 +44,6 @@ export class StartRideComponent implements OnInit {
     return this.tripDetailsForm.get('startDate');
   }
 
-  get startTime(): any {
-    return this.tripDetailsForm.get('startTime');
-  }
-
   tripDetails():void{
     this.tripDetailsBtn = true;
     if(this.tripDetailsForm.valid) {
@@ -56,8 +51,7 @@ export class StartRideComponent implements OnInit {
         "rider": this.cookieService.get('userId'),
         "source": this.source.value,
         "destination": this.destination.value,
-        "preferredTripDate": (this.startDate.value).toLocaleDateString(),
-        "preferredTripTime": (this.startTime.value).toLocaleTimeString(),
+        "preferredTripDate": this.startDate.value
       };
       console.log(formdata);
       

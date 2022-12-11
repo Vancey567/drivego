@@ -1,34 +1,38 @@
-<div class="limiter">
-    <div class="container-login">
+<div class="flex max-h-screen">
+    <div class="w-5 mt-3 mb-5 flex flex-column justify-content-center align-items-center">
         <div class="wrap-login">
-            <div class="flex justify-content-end mb-4">
-                <button (click)="displayModal = true" pButton type="button" label="ADD VEHICLE" class="p-button-success p-button-sm" icon="pi pi-plus"></button>
-            </div>
-
-            <div class="flex flex-column"> 
-                <p-card class="w-full mb-3" *ngFor="let vehicles of allVehicles">
-                    <div class="flex justify-content-between align-items-center w-full">
-                        <div class="flex justify-content-center align-items-center">
-                            <img src="assets/images/car1.jpeg" height="60px" class="">
+            <div class="login-form validate-form">
+                <span class="login-form-title my-3">
+                    Choose A vehicle
+                </span>
+                <div class="flex justify-content-end mb-4">
+                    <button (click)="displayModal = true" pButton type="button" label="ADD VEHICLE" class="p-button-success p-button-sm" icon="pi pi-plus"></button>
+                </div>
+    
+                <div class="flex flex-column"> 
+                    <p-card class="w-full mb-3" *ngFor="let vehicles of allVehicles">
+                        <div class="flex justify-content-between align-items-center w-full">
+                            <div class="flex justify-content-center align-items-center">
+                                <img src="assets/images/car1.jpeg" height="60px" class="">
+                            </div>
+                            <div>
+                                <p>Car Maker: {{vehicles.company}}</p>
+                                <p>Model: {{vehicles.model}}</p>
+                                <p>Type: {{vehicles.type}}</p>
+                            </div>
+                            <div>
+                                <p>Capacity: {{vehicles.capacity}}</p>
+                                <p>Color: {{vehicles.color}}</p>
+                                <p>No: {{vehicles.vehicleNumber}}</p>
+                            </div>
+                            <button pButton type="button" label="Choose" class="p-button-primary p-button-sm" (click)="tripStartModal(vehicles.id)"></button>
                         </div>
-                        <div>
-                            <p>Car Maker: {{vehicles.company}}</p>
-                            <p>Model: {{vehicles.model}}</p>
-                            <p>Type: {{vehicles.type}}</p>
-                        </div>
-                        <div>
-                            <p>Capacity: {{vehicles.capacity}}</p>
-                            <p>Color: {{vehicles.color}}</p>
-                            <p>No: {{vehicles.vehicleNumber}}</p>
-                        </div>
-                        <button pButton type="button" label="Choose" class="p-button-primary p-button-sm" (click)="tripStartModal(vehicles.id)"></button>
-                    </div>
-                </p-card>
-                
-
+                    </p-card>
+                </div>
             </div>
         </div>
     </div>
+    <div class="w-7"></div>
 </div>
 
 <p-dialog #dialog header="Register Vehicle" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"

@@ -19,15 +19,9 @@
                     </div>
                     
                     <div class="p-inputtext-sm w-full mb-4">
-                        <label for="startDate"d>Start Date:</label><br>
-                        <p-calendar inputId="basic" dateFormat="dd.mm.yy" styleClass="w-full mt-2" formControlName="startDate" placeholder="Enter ride start date" [minDate]="minDate" [readonlyInput]="true"></p-calendar>
+                        <label for="startDate"d>Start Date & Time:</label><br>
+                        <p-calendar inputId="basic" dateFormat="dd.mm.yy" [showTime]="true" [hourFormat]="'12'" styleClass="w-full mt-2" formControlName="startDate" placeholder="Enter ride start date and time" [minDate]="minDate" [readonlyInput]="true"></p-calendar>
                         <small class="p-invalid" style="color:red" *ngIf="startDate.hasError('required') && startDate.touched">This field is required!</small>
-                    </div>
-                    
-                    <div class="p-inputtext-sm w-full mb-4">
-                        <label for="startTime"d>Start Time:</label><br>
-                        <p-calendar [timeOnly]="true" [hourFormat]="'12'" styleClass="w-full mt-2" placeholder="Enter ride start time" formControlName="startTime"></p-calendar>
-                        <small class="p-invalid" style="color:red" *ngIf="startTime.hasError('required') && startTime.touched">This field is required!</small>
                     </div>
             
                     <div class="flex justify-content-center align-items-center ">
