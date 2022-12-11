@@ -51,23 +51,32 @@ class tripService {
 
     async acceptRider(driverId, riderId, status, hashedOtp) {
         try {
-            // const accepted = await MatchedTripModel.findOneAndUpdate(
-            //     { rider: ObjectId(riderId), driver: ObjectId(driverId) },
-            //     { status: status },
-            //     { new: true }
-            // );
-            const started = await MatchedTripModel.findOneAndUpdate(
-                { rider: ObjectId(riderId), driver: ObjectId(driverId) },
-                { status: status },
-                {$set: { otp: hashedOtp }}, 
-                {upsert: true},
-                { new: true }
-            );
+            let accepted;
+            if(status === 'accepted') {
+                accepted = await MatchedTripModel.findOneAndUpdate(
+                    { rider: ObjectId(riderId), driver: ObjectId(driverId) },
+                    { status: status },
+                    { otp: hashedOtp },
+                    {upsert: true},
+                    { new: true }
+                ).exec();
+            } else {
+                accepted = await MatchedTripModel.findOneAndUpdate(
+                    { rider: ObjectId(riderId), driver: ObjectId(driverId) },
+                    { status: status },
+                    { new: true }
+                );
+            }
+            console.log("Inside", accepted);
             return accepted.status === "accepted" ? true : false;
         } catch (err) {
             console.log(err);
             throw new Error(err);
         }
+    }
+
+    async getTripDetails() {
+        await MatchedTripModel.findById();
     }
 
     async startTrip(driverId,  riderId, status, otp) {

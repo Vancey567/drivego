@@ -49,14 +49,13 @@ class TripController {
 
     async requestDriver(req, res) {
         const {riderId, driverId} = req.body;
-        console.log({riderId, driverId});
         try {
             await TripService.requestDriver(riderId, driverId);
             // const trip = await TripService.saveMatchedTrip(riderId, driverId);
             return res.status(200).json({message: "Driver has been requested. Please wait for confirmation"});
         } catch(err) {
             console.log(err);
-            return res.status(500).json({message: "Problem finding trip for your!!"});
+            return res.status(500).json({message: "Request unsuccessful!!"});
         }
     }
 
@@ -82,7 +81,7 @@ class TripController {
                 const deletedDriver = await DriverService.deleteDriverTrip(driverId);
                 const deletedRider = await RiderService.deleteRiderTrip(riderId);
                 console.log(deletedDriver, deletedRider);
-                return res.status(200).json({message: `Your Ride request is accepted, Your OTP for the ride is ${otp}!!`}, {hash: hash});
+                return res.status(200).json({message: `Your Ride request is accepted, Your OTP for the ride is ${otp}!!`});
             } catch(err) {
                 console.log(err);
                 return res.status(500).json({message: "Problem sending OTP!!"});
@@ -95,13 +94,17 @@ class TripController {
     }
 
     async startTrip(req, res) {
-        const {riderId, driverId, otp, hash} = req.body;
+        const {tripId, riderId, driverId, otp} = req.body;
 
         try {
             const data = `${riderId}.${otp}`;
             const newHash = HashService.hashOtp(data);
 
-            const verified = await OtpService.verifyOtp(hash, newHash);
+            const tripDetails = await TripService.getTripDetails(tripId);
+            const hash = tripDetails.otp;
+            const [ riderId, hashedOtp ] = hash.split('.');
+
+            const verified = await OtpService.verifyOtp(hashedOtp, newHash);
             if(!verified) {
                 return res.status(200).json({message: "OTP didn't match!!"});
             }

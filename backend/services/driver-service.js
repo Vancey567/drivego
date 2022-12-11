@@ -30,7 +30,6 @@ class driverService {
         console.log(driverId);
         try {
             const deletedDriver = await driverModel.findByIdAndDelete(driverId);
-            console.log(deletedDriver);
             return deletedDriver;
         } catch (err) {
             console.log(err);

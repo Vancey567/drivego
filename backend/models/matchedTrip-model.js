@@ -9,7 +9,7 @@ const matchedTripSchema = new Schema ({
     // destination: {type: String, required: true},
     // startTime: {type: Date, required: false},
     // endTime: {type: Date, required: false},
-    otp: {type: String, required: true},
+    otp: {type: String, required: false},
     fare: {type: String, required: false},
     paymentType: {type: String, enum:['Cash', 'Card', 'UPI', 'NetBanking'], default: "Cash", required: true},
     paid: {type: Boolean, default: false, required: true},
