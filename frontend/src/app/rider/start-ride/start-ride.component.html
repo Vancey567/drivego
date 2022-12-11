@@ -17,17 +17,11 @@
                         <input type="text" for="destination" pInputText class="w-full mt-2" placeholder="Enter ride destination" formControlName="destination">
                         <small class="p-invalid" style="color:red" *ngIf="destination.hasError('required') && destination.touched">This field is required!</small>
                     </div>
-            
-                    <div class="p-inputtext-sm w-full mb-4">
-                        <label for="capacity"d>Capacity:</label><br>
-                        <input type="number" for="capacity" pInputText class="w-full mt-2" placeholder="Enter capacity" formControlName="capacity">
-                        <small class="p-invalid" style="color:red" *ngIf="tripCapacity.hasError('required') && tripCapacity.touched">This field is required!</small>
-                    </div>
                     
                     <div class="p-inputtext-sm w-full mb-4">
-                        <label for="startTime"d>Start Date:</label><br>
+                        <label for="startDate"d>Start Date:</label><br>
                         <p-calendar inputId="basic" dateFormat="dd.mm.yy" styleClass="w-full mt-2" formControlName="startDate" placeholder="Enter ride start date" [minDate]="minDate" [readonlyInput]="true"></p-calendar>
-                        <small class="p-invalid" style="color:red" *ngIf="startTime.hasError('required') && startTime.touched">This field is required!</small>
+                        <small class="p-invalid" style="color:red" *ngIf="startDate.hasError('required') && startDate.touched">This field is required!</small>
                     </div>
                     
                     <div class="p-inputtext-sm w-full mb-4">

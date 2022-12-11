@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {FormGroup,FormBuilder,Validators,NG_VALIDATORS} from "@angular/forms";
-// import {LoginService} from '../../services/login.service';
+import {BookRideService} from './../../services/book-ride.service';
 import {Router} from '@angular/router';
 import {CookieService} from 'ngx-cookie-service';
 import {MessageService} from 'primeng/api';
@@ -17,7 +17,7 @@ export class StartRideComponent implements OnInit {
   public tripDetailsBtn: boolean= false;
   minDate:any = new Date();
 
-  constructor(private messageService: MessageService, private fb: FormBuilder,private router: Router,private cookieService: CookieService) { }
+  constructor(private bookRideApi: BookRideService, private messageService: MessageService, private fb: FormBuilder,private router: Router,private cookieService: CookieService) { }
 
   ngOnInit(): void {
 
@@ -26,7 +26,7 @@ export class StartRideComponent implements OnInit {
       {
         source: ['',[Validators.required]],
         destination: ['',[Validators.required]],
-        capacity: ['',[Validators.required]],
+        startDate: ['',[Validators.required]],
         startTime: ['',[Validators.required]]
       }
     );
@@ -41,8 +41,8 @@ export class StartRideComponent implements OnInit {
     return this.tripDetailsForm.get('destination');
   }
 
-  get tripCapacity(): any {
-    return this.tripDetailsForm.get('capacity');
+  get startDate(): any {
+    return this.tripDetailsForm.get('startDate');
   }
 
   get startTime(): any {
@@ -52,40 +52,42 @@ export class StartRideComponent implements OnInit {
   tripDetails():void{
     this.tripDetailsBtn = true;
     if(this.tripDetailsForm.valid) {
-      let formdata: any = new FormData();
-      for(let key in this.tripDetailsForm.value) {
-        formdata.append(key,this.tripDetailsForm.value[key]);
-      }
-      // const ajax = this.login_api.loginUser(this.formdata);
-      // ajax.subscribe(
-      //   (response: any) => {
-      //     if(response.isLogged == true){
-      //       // this.cookieService.set('mlo-test',response.token,365,undefined,undefined,true,'Strict');
-      //       this.cookieService.set('isRight',btoa(response.isRight),365,undefined,undefined,true,'Strict');
-
-      //       // check cookies is store or not
-
-      //       this.showDialog('Successfully Login','Success');
-      //       setTimeout(() => {
-      //         this.router.navigateByUrl("/dashboard");
-      //       },1000);
-      //     }
-      //     else{
-      //       this.showDialog("Unable to login! Please try again later.",'Warning');
-      //     }
+      let formdata: any = {
+        "rider": this.cookieService.get('userId'),
+        "source": this.source.value,
+        "destination": this.destination.value,
+        "preferredTripDate": (this.startDate.value).toLocaleDateString(),
+        "preferredTripTime": (this.startTime.value).toLocaleTimeString(),
+      };
+      console.log(formdata);
+      
+      const ajax = this.bookRideApi.searchRide(formdata);
+      ajax.subscribe(
+        (response: any) => {
+          console.log(response);
           
-      //     this.tripDetailsBtn = false;
-      //   },
-      //   (error: any) => {
-      //     // 
-      //     this.showDialog(error,'Warning');
-      //     this.tripDetailsBtn = false;
-      //   }
-      // );
-      this.messageService.add({severity:'success', summary:'Success', detail:'Vehicle Added Successfully'});
-      this.router.navigateByUrl("/rider-list");
-      this.tripDetailsBtn = false;
-      formdata = new FormData();
+          // if(response.message == "User Registered"){
+          //   this.cookieService.set("dob",response.user.dob,365,undefined,undefined,true,'Strict');
+          //   this.cookieService.set("isActive",response.user.isActivated,365,undefined,undefined,true,'Strict');
+          //   this.cookieService.set("email",response.user.email,365,undefined,undefined,true,'Strict');
+          //   this.cookieService.set("gender",response.user.gender,365,undefined,undefined,true,'Strict');
+          //   this.cookieService.set("name",response.user.name,365,undefined,undefined,true,'Strict');
+          //   this.cookieService.set("occupation",response.user.occupation,365,undefined,undefined,true,'Strict');
+          //   this.messageService.add({severity:'success', summary:'Success', detail:'User Details Added Successfully'});
+          //   // this.displayModal = false;
+          //   this.router.navigateByUrl("/start-ride");
+          // }
+          // else{
+          //   this.messageService.add({severity:'error', summary:'Error', detail:"Something went wrong! Please try again later."});
+          // }
+          this.tripDetailsBtn = false;
+        },
+        (error: any) => {
+          // this.messageService.add({severity:'error', summary:'Error', detail:error});
+          console.log(error);
+          this.tripDetailsBtn = false;
+        }
+      );
     }
   }
 

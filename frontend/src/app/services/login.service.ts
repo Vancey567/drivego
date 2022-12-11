@@ -37,7 +37,6 @@ export class LoginService {
 
   verifyOTP(formdata: any): Observable<any>{
     console.log(formdata);
-    
     const ajax = this.http.post<any>(this.apiURL + '/verifyotp',formdata,this.httpOptions).pipe(catchError(this.loginHandleError));
     return ajax;
   }

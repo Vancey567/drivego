@@ -8,7 +8,7 @@ import {CookieService} from 'ngx-cookie-service';
 @Injectable({
   providedIn: 'root'
 })
-export class ReferService {
+export class BookRideService {
 
   private apiURL: string = environment.apiURL;
   constructor(private http: HttpClient,private cookieService: CookieService) { }
@@ -18,17 +18,24 @@ export class ReferService {
     credentials: "include",
   };
 
-  addRefer(formdata: any): Observable<any>{
-    console.log(formdata);
-    const ajax = this.http.post<any>(this.apiURL + '/referral',formdata,this.httpOptions).pipe(catchError(this.handleError));
+  // checkLogin(): Observable<any> {
+  //   const ajax = this.http.get<any>(this.apiURL + '/auto',this.httpOptions);
+  //   return ajax;
+  // }
+
+  // used to auto login user and user verified after login
+  // autoLogin(): Observable<any> {
+  //   const ajax = this.http.get<any>(this.apiURL + '/dashboard',this.httpOptions).pipe(catchError(this.handleError));
+  //   return ajax;
+  // }
+
+  searchRide(formdata: any): Observable<any>{
+    // console.log(formdata);
+    
+    const ajax = this.http.post<any>(this.apiURL + '/sendotp',formdata,this.httpOptions).pipe(catchError(this.handleError));
     return ajax;
   }
 
-  allRefer(formdata: any): Observable<any>{
-    console.log(formdata);
-    const ajax = this.http.post<any>(this.apiURL + '/referredUsers',formdata,this.httpOptions).pipe(catchError(this.handleError));
-    return ajax;
-  }
 
   handleError(error: HttpErrorResponse): Observable<any> {
     let errorMsg = '';
@@ -39,5 +46,4 @@ export class ReferService {
     }
     return throwError(errorMsg);
   }
-
 }

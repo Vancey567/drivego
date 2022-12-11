@@ -15,27 +15,11 @@ import {MessageService} from 'primeng/api';
 export class ReferComponent implements OnInit {
   public referForm: any;
   public referAddBtn: boolean= false;
-  referUserList: any[] = [
-    {
-      'phone': 7662547789,
-      'date': "12 Jan 2022",
-      'status': 'Active'
-    },
-    {
-      'phone': 8562547789,
-      'date': "30 Jan 2022",
-      'status': 'Active'
-    },
-    {
-      'phone': 8862547789,
-      'date': "12 Feb 2022",
-      'status': 'Pending'
-    }
-  ];
+  referUserList: any[] = [];
   constructor(private refereApi: ReferService, private messageService: MessageService, private fb: FormBuilder,private router: Router,private cookieService: CookieService) { }
 
   ngOnInit(): void {
-
+    this.allreferUser();
     this.referForm = this.fb.group(
       {
         mobile: ['',[Validators.required]]
@@ -58,17 +42,33 @@ export class ReferComponent implements OnInit {
       ajax.subscribe(
         (response: any) => {
           console.log(response);
-          // this.messageService.add({severity:'success', summary:'Success', detail:response.message});
-          // this.displayModal = false;
+          this.messageService.add({severity:'success', summary:'Success', detail:"Refer Sent Successfully."});
+          this.referForm.reset();
           this.referAddBtn = false;
-          // this.allRegisterVehicle();
+          this.allreferUser();
         },
         (error: any) => {
           console.log(error);
-          // this.messageService.add({severity:'error', summary:'Error', detail:error});
+          this.messageService.add({severity:'error', summary:'Error', detail:error});
           this.referAddBtn = false;
         }
       );
     }
+  }
+
+  allreferUser(){
+    let formdata: any = {
+      "userId": this.cookieService.get('userId')
+    };
+    const ajax = this.refereApi.allRefer(formdata);
+    ajax.subscribe(
+      (response: any) => {
+        this.referUserList = response;
+      },
+      (error: any) => {
+        console.log(error);
+        // this.messageService.add({severity:'warning', summary:'Warning', detail:error});
+      }
+    );
   }
 }
