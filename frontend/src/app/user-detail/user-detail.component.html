@@ -1,47 +1,48 @@
-<div class="limiter">
-    <div class="container-login">
+<div class="flex max-h-screen">
+    <div class="w-5 mt-3 mb-5 flex flex-column justify-content-center align-items-center">
         <div class="wrap-login">
-            <button (click)="start('refer')" pButton type="button" label="Refer" class="p-button-warning w-5 mb-5"></button>
+            <div class="login-form validate-form">
+                <span class="login-form-title my-3">
+                    Register
+                </span>
+                <form class="" (submit)="userDetails()" [formGroup]="userDetailsForm">
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="name"d>Name:</label><br>
+                        <input type="text" for="name" pInputText class="w-full mt-2" placeholder="Enter your name" formControlName="name">
+                        <small class="p-invalid" style="color:red" *ngIf="name.hasError('required') && name.touched">This field is required!</small>
+                    </div>
             
-            <div class="flex justify-content-between"> 
-                <button (click)="start('start-ride')" pButton type="button" label="Book a ride" class="p-button-warning w-5"></button>
-                <button (click)="start('start-trip')" pButton type="button" label="Create a trip" class="p-button-danger w-5"></button>
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="email"d>Email:</label><br>
+                        <input type="email" for="email" pInputText class="w-full mt-2" placeholder="Enter your email address" formControlName="email">
+                        <small class="p-invalid" style="color:red" *ngIf="email.hasError('required') && email.touched">This field is required!</small>
+                    </div>
+            
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="dob"d>DOB:</label><br>
+                        <input type="date" for="dob" pInputText class="w-full mt-2" placeholder="Enter your DOB" formControlName="dob">
+                        <small class="p-invalid" style="color:red" *ngIf="dob.hasError('required') && dob.touched">This field is required!</small>
+                    </div>
+                    
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="occupation"d>Occupation:</label><br>
+                        <input type="text" for="occupation" pInputText class="w-full mt-2" placeholder="Enter your occupation" formControlName="occupation">
+                        <small class="p-invalid" style="color:red" *ngIf="occupation.hasError('required') && occupation.touched">This field is required!</small>
+                    </div>
+                    
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="gender"d>Gender:</label><br>
+                        <p-dropdown appendTo="dialog" styleClass="w-full mt-2" [options]="userGender" optionLabel="name" optionValue="value" placeholder="Enter your gender" formControlName="gender"></p-dropdown>
+                        <small class="p-invalid" style="color:red" *ngIf="gender.hasError('required') && gender.touched">This field is required!</small>
+                    </div>
+            
+                    <div class="flex justify-content-center align-items-center ">
+                        <button pButton type="submit" label="SUBMIT" class="p-button-success" [disabled]="userDetailsForm.invalid || userDetailsBtn" icon="" [loading]="userDetailsBtn"></button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+    <div class="w-7"></div>
 </div>
-<p-dialog header="User Details" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
-    [draggable]="false" [resizable]="false" #dialog>
-    <form class="" (submit)="userDetails()" [formGroup]="userDetailsForm">
-        <div class="p-inputtext-sm w-full mb-4">
-            <label for="name"d>Name:</label><br>
-            <input type="text" for="name" pInputText class="w-full mt-2" placeholder="Enter your name" formControlName="name">
-        </div>
-
-        <div class="p-inputtext-sm w-full mb-4">
-            <label for="email"d>Email:</label><br>
-            <input type="email" for="email" pInputText class="w-full mt-2" placeholder="Enter your email address" formControlName="email">
-        </div>
-
-        <div class="p-inputtext-sm w-full mb-4">
-            <label for="dob"d>DOB:</label><br>
-            <input type="date" for="dob" pInputText class="w-full mt-2" placeholder="Enter your DOB" formControlName="dob">
-        </div>
-        
-        <div class="p-inputtext-sm w-full mb-4">
-            <label for="occupation"d>Occupation:</label><br>
-            <input type="text" for="occupation" pInputText class="w-full mt-2" placeholder="Enter your occupation" formControlName="occupation">
-        </div>
-        
-        <div class="p-inputtext-sm w-full mb-4">
-            <label for="gender"d>Gender:</label><br>
-            <p-dropdown appendTo="dialog" styleClass="w-full mt-2" [options]="userGender" optionLabel="name" optionValue="value" placeholder="Enter your gender" formControlName="gender"></p-dropdown>
-        </div>
-
-        <div class="flex justify-content-center align-items-center ">
-            <button pButton type="submit" label="SUBMIT" class="p-button-success" [disabled]="userDetailsForm.invalid || userDetailsBtn" icon="" [loading]="userDetailsBtn"></button>
-        </div>
-    </form>
-</p-dialog>
-
 <p-toast></p-toast>

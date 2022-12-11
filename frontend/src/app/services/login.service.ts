@@ -29,7 +29,7 @@ export class LoginService {
   // }
 
   loginUser(formdata: any): Observable<any>{
-    console.log(formdata);
+    // console.log(formdata);
     
     const ajax = this.http.post<any>(this.apiURL + '/sendotp',formdata,this.httpOptions).pipe(catchError(this.loginHandleError));
     return ajax;

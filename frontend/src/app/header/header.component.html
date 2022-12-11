@@ -1,0 +1,24 @@
+
+<!-- <p-menubar [model]="items" styleClass="nav">
+    <ng-template pTemplate="start">
+        <img src="assets/images/logo.png" height="40" class="mr-2">
+    </ng-template>
+</p-menubar> -->
+<div class="nav flex justify-content-between px-5">
+    <div>
+        <img src="assets/images/logo.png" height="40" class="mr-2">
+    </div>
+    <div class="flex justify-content-center align-items-center">
+        <a (click)="move('')" *ngIf="!cookieExists">Home</a>
+        <a *ngIf="!cookieExists">Carreers</a>
+        <a *ngIf="!cookieExists">About Us</a>
+        <a *ngIf="!cookieExists">Contact Us</a>
+        <button (click)="move('login')" *ngIf="!cookieExists">Login</button>
+        <!-- after login -->
+        <a (click)="move('start-ride')" *ngIf="cookieExists">Book a Ride</a>
+        <a (click)="move('start-trip')" *ngIf="cookieExists">Start a Trip</a>
+        <a (click)="move('start-trip')" *ngIf="cookieExists">History</a>
+        <a (click)="move('refer')" *ngIf="cookieExists">Refer a Friend</a>
+        <button (click)="move('login')" *ngIf="cookieExists">Logout</button>
+    </div>
+</div>
