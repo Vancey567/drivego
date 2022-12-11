@@ -24,8 +24,6 @@ class ReferralService {
     }
 
     async getReferredUsers(userId1) {
-        console.log(userId1);
-        console.log(typeof(userId1));
         try {
             const userId = ObjectId(userId1);
             const referrals = await ReferralModel.find({userId: userId});

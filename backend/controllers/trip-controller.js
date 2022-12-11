@@ -32,18 +32,23 @@ class TripController {
     }
 
     async findTrip(req, res) {
-        const {rider, source, destination, time, seats} = req.body;
+        const {source, destination, time, seats} = req.body;
         
         try {
             const driver = await TripService.findDriver(source, destination, time, seats);
             if(!driver || !driver.length === 0) {
                 return res.status(404).json({message: "Sorry, No Driver Found for Your Destination"});
             }
-            return res.status(200).json({driver: driver});
+            return res.status(200).json(driver);
         } catch (err) {
             console.log(err);
             return res.status(500).json({message: "Problem finding trip for your!!"});
         }
+    }
+
+    async driverApproval(req, res) {
+        const {rider, driver} = req.body;
+        
     }
 
     async saveMatchedTrip(req, res) {

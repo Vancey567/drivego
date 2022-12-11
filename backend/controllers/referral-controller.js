@@ -42,6 +42,6 @@ class ReferralController {
             return res.status(400).json({message: 'Something went wrong, Please try again'});
         }
     }
-} 
+}
 
 module.exports = new ReferralController();
