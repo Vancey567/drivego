@@ -102,7 +102,11 @@ export class LoginComponent implements OnInit {
             this.cookieService.set("userPhone",response.user.phone,365,undefined,undefined,true,'Strict');
             this.messageService.add({severity:'success', summary:'Success', detail:'Login Successfully'});
             setTimeout(() => {
-              this.router.navigateByUrl("/user-details");
+              if(this.cookieService.get('isActive') == "true"){
+                this.router.navigateByUrl("/start-ride");
+              }else{
+                this.router.navigateByUrl("/user-details");
+              }
               this.OTPFormDisplay = false;
               this.verifyOTPBtn = false;
             },1000);

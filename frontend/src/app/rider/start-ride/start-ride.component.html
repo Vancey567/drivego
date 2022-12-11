@@ -1,35 +1,42 @@
-<div class="limiter">
-    <div class="container-login">
+<div class="flex max-h-screen">
+    <div class="w-5 mt-3 mb-5 flex flex-column justify-content-center align-items-center">
         <div class="wrap-login">
-            <h2 class="text-center">Trip details</h2><hr class="my-2">
-            <form class="" (submit)="tripDetails()" [formGroup]="tripDetailsForm">
-                <div class="p-inputtext-sm w-full mb-4">
-                    <label for="source"d>Source:</label><br>
-                    <input type="text" for="source" pInputText class="w-full mt-2" placeholder="Enter trip source" formControlName="source">
-                </div>
-        
-                <div class="p-inputtext-sm w-full mb-4">
-                    <label for="destination"d>Destination:</label><br>
-                    <input type="text" for="destination" pInputText class="w-full mt-2" placeholder="Enter trip destination" formControlName="destination">
-                </div>
-        
-                <div class="p-inputtext-sm w-full mb-4">
-                    <label for="capacity"d>Capacity:</label><br>
-                    <input type="number" for="capacity" pInputText class="w-full mt-2" placeholder="Enter capacity" formControlName="capacity">
-                </div>
-                
-                <div class="p-inputtext-sm w-full mb-4">
-                    <label for="startTime"d>Start Time:</label><br>
-                    <input type="text" for="startTime" pInputText class="w-full mt-2" placeholder="Enter trip start time" formControlName="startTime">
-                </div>
-        
-                <div class="flex justify-content-center align-items-center ">
-                    <button pButton type="submit" label="SUBMIT" class="p-button-success" [disabled]="tripDetailsForm.invalid || tripDetailsBtn" icon="" [loading]="tripDetailsBtn"></button>
-                </div>
-            </form>
+            <div class="login-form validate-form">
+                <span class="login-form-title my-3">
+                    Book a ride
+                </span>
+                <form class="" (submit)="tripDetails()" [formGroup]="tripDetailsForm">
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="source"d>Source:</label><br>
+                        <input type="text" for="source" pInputText class="w-full mt-2" placeholder="Enter trip source" formControlName="source">
+                        <small class="p-invalid" style="color:red" *ngIf="source.hasError('required') && source.touched">This field is required!</small>
+                    </div>
+            
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="destination"d>Destination:</label><br>
+                        <input type="text" for="destination" pInputText class="w-full mt-2" placeholder="Enter trip destination" formControlName="destination">
+                        <small class="p-invalid" style="color:red" *ngIf="destination.hasError('required') && destination.touched">This field is required!</small>
+                    </div>
+            
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="capacity"d>Capacity:</label><br>
+                        <input type="number" for="capacity" pInputText class="w-full mt-2" placeholder="Enter capacity" formControlName="capacity">
+                        <small class="p-invalid" style="color:red" *ngIf="tripCapacity.hasError('required') && tripCapacity.touched">This field is required!</small>
+                    </div>
+                    
+                    <div class="p-inputtext-sm w-full mb-4">
+                        <label for="startTime"d>Start Time:</label><br>
+                        <input type="text" for="startTime" pInputText class="w-full mt-2" placeholder="Enter trip start time" formControlName="startTime">
+                        <small class="p-invalid" style="color:red" *ngIf="startTime.hasError('required') && startTime.touched">This field is required!</small>
+                    </div>
+            
+                    <div class="flex justify-content-center align-items-center ">
+                        <button pButton type="submit" label="SUBMIT" class="p-button-success" [disabled]="tripDetailsForm.invalid || tripDetailsBtn" icon="" [loading]="tripDetailsBtn"></button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+    <div class="w-7"></div>
 </div>
-
-
 <p-toast></p-toast>

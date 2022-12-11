@@ -12,7 +12,7 @@ import {MessageService} from 'primeng/api';
   providers: [CookieService,MessageService]
 })
 export class UserDetailComponent implements OnInit {
-  displayModal: boolean= false;
+  // displayModal: boolean= false;
   public userDetailsForm: any;
   public userGender: any[] = [
     {name: 'Male', value: 'Male'},
@@ -24,9 +24,7 @@ export class UserDetailComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.cookieService.get('isActive') == "true"){
-      this.displayModal = false;
-    }else{
-      this.displayModal = true;
+      this.router.navigateByUrl("/start-ride");
     }
     this.userDetailsForm = this.fb.group(
       {
@@ -83,7 +81,8 @@ export class UserDetailComponent implements OnInit {
             this.cookieService.set("name",response.user.name,365,undefined,undefined,true,'Strict');
             this.cookieService.set("occupation",response.user.occupation,365,undefined,undefined,true,'Strict');
             this.messageService.add({severity:'success', summary:'Success', detail:'User Details Added Successfully'});
-            this.displayModal = false;
+            // this.displayModal = false;
+            this.router.navigateByUrl("/start-ride");
           }
           else{
             this.messageService.add({severity:'error', summary:'Error', detail:"Something went wrong! Please try again later."});
