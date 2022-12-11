@@ -28,6 +28,20 @@ class ReferralController {
             return res.status(400).json({message: 'Something went wrong, Please try again'});
         }
     }
+
+    async referredUsers(req, res) {
+        const {userId} = req.body;
+        try {
+            const referrals = await ReferralService.getReferredUsers(userId);
+            if(referrals.length === 0) {
+                return res.status(404).json({message: `You haven't referred anyone yet, refer someone!!`});
+            }
+            return res.status(200).json(referrals);
+        } catch (err) {
+            console.log(err);
+            return res.status(400).json({message: 'Something went wrong, Please try again'});
+        }
+    }
 } 
 
 module.exports = new ReferralController();

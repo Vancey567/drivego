@@ -27,6 +27,7 @@ router.post('/findtrip', tripController.findTrip);
 
 // Referral
 router.post('/referral', referralController.generateReferral);
+router.post('/referredUsers', referralController.referredUsers);
 
 // User DashBoard
 router.get('/users', userController.getUsers); // get all users
