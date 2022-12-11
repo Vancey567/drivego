@@ -21,10 +21,19 @@ router.post('/removevehicle', vehicleController.removeVehicle);
 
 // Rider
 router.post('/rider/createRide', rideController.createRide);
-router.post('/findtrip', tripController.findTrip);
 
 // Driver
-router.post('/trip/createtrip', tripController.createTrip);
+router.post('/trip/createDriversTrip', tripController.createDriversTrip);
+
+// Rider's Trip
+router.post('/findTrip', tripController.findTrip);
+router.post('/requestDriver', tripController.requestDriver);
+
+// Driver's Trip
+router.post('/driverApproval', tripController.driverApproval);
+
+
+
 
 // Referral
 router.post('/referral', referralController.generateReferral);
