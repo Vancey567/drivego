@@ -50,7 +50,12 @@ export class LoginComponent implements OnInit {
   login():void{
     this.loginBtn = true;
     if(this.loginForm.valid) {  
-      const ajax = this.login_api.loginUser(this.loginForm.value);
+      let formdata: any = {
+        "phone": "+91"+(this.phone.value).toString()
+      };
+      console.log(formdata);
+      
+      const ajax = this.login_api.loginUser(formdata);
       ajax.subscribe(
         (response: any) => {
           console.log(response);

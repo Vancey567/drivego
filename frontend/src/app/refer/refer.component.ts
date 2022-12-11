@@ -52,7 +52,7 @@ export class ReferComponent implements OnInit {
     if(this.referForm.valid) {
       let formdata: any = {
         "userId": this.cookieService.get('userId'),
-        "referredPhone": this.mobile.value
+        "referredPhone": "+91"+(this.mobile.value).toString()
       };
       const ajax = this.refereApi.addRefer(formdata);
       ajax.subscribe(
