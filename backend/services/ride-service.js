@@ -1,6 +1,6 @@
 const TripModel = require('../models/trip-model');
 const matchedTrip = require('../models/matchedTrip-model');
-const RriderModel = require('../models/rider-model');
+const RiderModel = require('../models/rider-model');
 var ObjectId = require('mongoose').Types.ObjectId; 
 
 class rideService {
@@ -16,7 +16,7 @@ class rideService {
 
     async createRide({rider, extraPerson, source, destination, preferredTripTime, offeredFare, luggage}) {
         try {
-            return await RriderModel.create({rider, extraPerson, source, destination, preferredTripTime, offeredFare, luggage});
+            return await RiderModel.create({rider, extraPerson, source, destination, preferredTripTime, offeredFare, luggage});
         } catch(err) {
             console.log(err);
             throw new Error(err.message);
@@ -25,9 +25,9 @@ class rideService {
 
     async searchRide(owner) {
         try {
-            const ownerId = new ObjectId(owner);
-            const existingRide = await riderModel.find({owner: ownerId});
-            return existingRide ? true : false;
+            const ownerId = new ObjectId(owner);            
+            const existingRide = await RiderModel.find({rider: ownerId});
+            return existingRide && existingRide.length > 0 ? true : false;
         } catch (err) {
             console.log(err);
             throw new Error(err.message); 
@@ -36,7 +36,7 @@ class rideService {
 
     async deleteRiderTrip(riderId) {
         try {
-            const deletedRider = await RriderModel.findByIdAndDelete(riderId);
+            const deletedRider = await RiderModel.findByIdAndDelete(riderId);
             return deletedRider;
         } catch (err) {
             console.log(err);
