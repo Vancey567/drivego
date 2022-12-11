@@ -5,6 +5,7 @@ const UserService = require('../services/user-service');
 const DriverService = require('../services/driver-service');
 const RiderService = require('../services/ride-service');
 const OtpService = require('../services/otp-service');
+const HashService = require('../services/hash-service');
 
 const DriverModel = require('../models/driver-model');
 
@@ -32,11 +33,10 @@ class TripController {
     }
 
     async findTrip(req, res) {
-        const {source, destination, time, seats} = req.body;
+        const {riderId} = req.body;
         try {
-            // const driver = await TripService.findDriver(source, destination, seats);
-            const driver = await TripService.findDriver(source, destination, time, seats);
-            console.log(driver);
+            const rider = await RiderService.riderDetails(riderId);
+            const driver = await TripService.findDriver(rider.source, rider.destination, rider.preferredTripTime);
             if(!driver || driver.length === 0) {
                 return res.status(404).json({message: "Sorry, No Driver Found for Your Destination"});
             }
@@ -63,14 +63,18 @@ class TripController {
     async driverApproval(req, res) {
         const {riderId, driverId, status} = req.body;
         try {
-            const accepted = await TripService.acceptRider(riderId, driverId, status);
-                        
+            const otp = await OtpService.generateOtp();
+            const data = `${riderId}.${otp}`;
+            const hashedOtp = HashService.hashOtp(data);
+            console.log("hashedOtp", hashedOtp);
+
+            const accepted = await TripService.acceptRider(riderId, driverId, status, hashedOtp);
+            
             if(!accepted) {
                 return res.status(200).json({message: "Sorry, Driver rejected your ride request!!"});
             }
 
             try {
-                const otp = await OtpService.generateOtp();
                 const user = await UserService.findUserDetails(riderId);
                 // await OtpService.sendTripOtpBySms(user.phone, otp);
 
@@ -78,7 +82,7 @@ class TripController {
                 const deletedDriver = await DriverService.deleteDriverTrip(driverId);
                 const deletedRider = await RiderService.deleteRiderTrip(riderId);
                 console.log(deletedDriver, deletedRider);
-                return res.status(200).json({message: `Your Ride request is accepted, Your OTP for the ride is ${otp}!!`});
+                return res.status(200).json({message: `Your Ride request is accepted, Your OTP for the ride is ${otp}!!`}, {hash: hash});
             } catch(err) {
                 console.log(err);
                 return res.status(500).json({message: "Problem sending OTP!!"});
@@ -91,12 +95,18 @@ class TripController {
     }
 
     async startTrip(req, res) {
-        const {riderId, driverId, otp} = req.body;
+        const {riderId, driverId, otp, hash} = req.body;
 
         try {
-            const verified = await OtpService.verify();
+            const data = `${riderId}.${otp}`;
+            const newHash = HashService.hashOtp(data);
+
+            const verified = await OtpService.verifyOtp(hash, newHash);
+            if(!verified) {
+                return res.status(200).json({message: "OTP didn't match!!"});
+            }
+
             const started = await TripService.startTrip(riderId, driverId);
-            
             if(!started) {
                 return res.status(200).json({message: "Sorry, Driver rejected your ride request!!"});
             }

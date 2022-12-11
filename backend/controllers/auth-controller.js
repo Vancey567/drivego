@@ -28,7 +28,7 @@ class AuthController {
         // Check if Reffered
         const exist = await ReferralService.referralAlreadyExists(phone);
         if(exist === false) {
-            return res.status(400).json({message: `${phone} is not reffered, Ask someone for referral!!`});
+            return res.status(400).json({message: `${phone} is not referred, Ask someone for referral!!`});
         }
 
         const otp = await otpService.generateOtp();
@@ -36,7 +36,7 @@ class AuthController {
         const ttl = 1000 * 60 * 60 * 24;
         const expires = Date.now() + ttl;
         const data = `${phone}.${otp}.${expires}`;
-        
+
         const hash = hashService.hashOtp(data);
 
         try {
@@ -70,7 +70,7 @@ class AuthController {
         if(!isValid) {
             return res.status(500).json({message: 'Invalid OTP', otpValid: false});
         }
-
+        
         let user;
         try {
             user = await userService.findUser({phone: phone});// Find the user from the data using there phone number

@@ -22,19 +22,16 @@ class tripService {
     //     }
     // }
 
-    async findDriver(source, destination, time, seats) {
-    // async findDriver(source, destination, seats) {
-        
+    async findDriver(source, destination, time) {        
         try {
             const driver = await DriverModel.find({
                 source: source,
                 destination: destination,
-                time: { $gte: (time - 5) % 23, $lte: (time + 5) % 23},
+                // time: { $gte: (time - 5) % 23, $lte: (time + 5) % 23},
                 // time: { $gte: {$substract: [time, 18000000]}, $lte: time + 9800 },
-                availableSeats: { $gte: seats }
+                // availableSeats: { $gte: seats }
             });
             console.log(driver);
-            
             return driver;
         } catch (err) {
             console.log(err);
@@ -52,11 +49,18 @@ class tripService {
         }
     }
 
-    async acceptRider(driverId, riderId, status) {
+    async acceptRider(driverId, riderId, status, hashedOtp) {
         try {
-            const accepted = await MatchedTripModel.findOneAndUpdate(
+            // const accepted = await MatchedTripModel.findOneAndUpdate(
+            //     { rider: ObjectId(riderId), driver: ObjectId(driverId) },
+            //     { status: status },
+            //     { new: true }
+            // );
+            const started = await MatchedTripModel.findOneAndUpdate(
                 { rider: ObjectId(riderId), driver: ObjectId(driverId) },
                 { status: status },
+                {$set: { otp: hashedOtp }}, 
+                {upsert: true},
                 { new: true }
             );
             return accepted.status === "accepted" ? true : false;
@@ -66,7 +70,7 @@ class tripService {
         }
     }
 
-    async startTrip(driverId,  riderId, status) {
+    async startTrip(driverId,  riderId, status, otp) {
         try {
             const started = await MatchedTripModel.findOneAndUpdate(
                 { rider: ObjectId(riderId), driver: ObjectId(driverId) },

@@ -14,9 +14,9 @@ class rideService {
         }
     }
 
-    async createRide({rider, extraPerson, source, destination, preferredTripTime, offeredFare, luggage}) {
+    async createRide({rider, source, destination, preferredTripTime, luggage}) {
         try {
-            return await RiderModel.create({rider, extraPerson, source, destination, preferredTripTime, offeredFare, luggage});
+            return await RiderModel.create({rider, source, destination, preferredTripTime, luggage});
         } catch(err) {
             console.log(err);
             throw new Error(err.message);
@@ -42,6 +42,11 @@ class rideService {
             console.log(err);
             throw new Error(err.message);
         }
+    }
+
+    async riderDetails(riderId) {
+        const riderDetail = await RiderModel.findOne({rider: ObjectId(riderId)});
+        return riderDetail;
     }
 }
 

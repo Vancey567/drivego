@@ -4,14 +4,14 @@ const tripService = require('../services/trip-service');
 
 class RideController {
     async createRide(req, res) {
-        const { rider, extraPerson, source, destination, preferredTripTime, offeredFare, luggage } = req.body;
+        const { rider, source, destination, preferredTripTime, luggage } = req.body;
 
         try {
             const createNewTrip = await rideService.searchRide(rider);
             if(createNewTrip) {
                 return res.json({message: "You already have a ride created!!"});
             } else {
-                const rideData = await rideService.createRide({rider, extraPerson, source, destination, preferredTripTime, offeredFare, luggage});
+                const rideData = await rideService.createRide({rider, source, destination, preferredTripTime, luggage});
                 return res.status(200).json({rideData, message: "Ride Created Successfully, Soon we will find a trip for you!!"});
             }
         } catch(err) {
