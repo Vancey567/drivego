@@ -15,7 +15,7 @@ export class StartTripComponent implements OnInit {
   displayModal: boolean= false;
   public registerVehicleForm: any;
   public registerVehicleBtn: boolean= false;
-
+  allVehicles:any;
   // trip
   tripModal: boolean= false;
   public tripDetailsForm: any;
@@ -26,6 +26,7 @@ export class StartTripComponent implements OnInit {
     {name: '4-wheeler', value: '4-wheeler'},
     {name: 'Others', value: 'others'}
   ];
+
   constructor(private vehicleApi: VehicleService, private messageService: MessageService, private fb: FormBuilder,private router: Router,private cookieService: CookieService) { }
 
   ngOnInit(): void {
@@ -121,20 +122,8 @@ export class StartTripComponent implements OnInit {
           console.log(response);
           this.messageService.add({severity:'success', summary:'Success', detail:response.message});
           this.displayModal = false;
-          // if(response.message == "User Registered"){
-          //   this.cookieService.set("dob",response.user.dob,365,undefined,undefined,true,'Strict');
-          //   this.cookieService.set("isActive",response.user.isActivated,365,undefined,undefined,true,'Strict');
-          //   this.cookieService.set("email",response.user.email,365,undefined,undefined,true,'Strict');
-          //   this.cookieService.set("gender",response.user.gender,365,undefined,undefined,true,'Strict');
-          //   this.cookieService.set("name",response.user.name,365,undefined,undefined,true,'Strict');
-          //   this.cookieService.set("occupation",response.user.occupation,365,undefined,undefined,true,'Strict');
-          //   this.messageService.add({severity:'success', summary:'Success', detail:'User Details Added Successfully'});
-          //   this.displayModal = false;
-          // }
-          // else{
-          //   this.messageService.add({severity:'error', summary:'Error', detail:"Something went wrong! Please try again later."});
-          // }
           this.registerVehicleBtn = false;
+          this.allRegisterVehicle();
         },
         (error: any) => {
           console.log(error);
@@ -154,7 +143,9 @@ export class StartTripComponent implements OnInit {
       (response: any) => {
         console.log(response);
         
-        // this.categories = response.data;
+        this.allVehicles = response.vehicles;
+        console.log(this.allVehicles);
+        
         // this.allCategories = response.data;
       },
       (error: any) => {
@@ -205,6 +196,8 @@ export class StartTripComponent implements OnInit {
     }
   }
 
-  
+  tripStartModal(vehicleId:any):void{
+    this.tripModal = true;
+  }
 
 }
