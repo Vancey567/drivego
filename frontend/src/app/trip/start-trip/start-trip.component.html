@@ -6,39 +6,26 @@
             </div>
 
             <div class="flex flex-column"> 
-                <p-card class="w-full">
+                <p-card class="w-full mb-3" *ngFor="let vehicles of allVehicles">
                     <div class="flex justify-content-between align-items-center w-full">
                         <div class="flex justify-content-center align-items-center">
                             <img src="assets/images/car1.jpeg" height="60px" class="">
                         </div>
                         <div>
-                            <p>Model: Desire</p>
-                            <p>No: 200</p>
+                            <p>Car Maker: {{vehicles.company}}</p>
+                            <p>Model: {{vehicles.model}}</p>
+                            <p>Type: {{vehicles.type}}</p>
                         </div>
                         <div>
-                            <p>Capacity: 4</p>
-                            <p>Color: Red</p>
+                            <p>Capacity: {{vehicles.capacity}}</p>
+                            <p>Color: {{vehicles.color}}</p>
+                            <p>No: {{vehicles.vehicleNumber}}</p>
                         </div>
-                        <button pButton type="button" label="Choose" class="p-button-primary p-button-sm" (click)="tripModal = true"></button>
+                        <button pButton type="button" label="Choose" class="p-button-primary p-button-sm" (click)="tripStartModal(vehicles.id)"></button>
                     </div>
                 </p-card>
                 
-                <p-card class="w-full mt-3">
-                    <div class="flex justify-content-between align-items-center w-full">
-                        <div class="flex justify-content-center align-items-center">
-                            <img src="assets/images/car2.jpg" height="60px" class="">
-                        </div>
-                        <div>
-                            <p>Model: Desire</p>
-                            <p>No: 200</p>
-                        </div>
-                        <div>
-                            <p>Capacity: 4</p>
-                            <p>Color: Red</p>
-                        </div>
-                        <button pButton type="button" label="Choose" class="p-button-primary p-button-sm" (click)="tripModal = true"></button>
-                    </div>
-                </p-card>
+
             </div>
         </div>
     </div>
