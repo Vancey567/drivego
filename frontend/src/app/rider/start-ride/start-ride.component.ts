@@ -15,6 +15,7 @@ export class StartRideComponent implements OnInit {
 
   public tripDetailsForm: any;
   public tripDetailsBtn: boolean= false;
+  minDate:any = new Date();
 
   constructor(private messageService: MessageService, private fb: FormBuilder,private router: Router,private cookieService: CookieService) { }
 

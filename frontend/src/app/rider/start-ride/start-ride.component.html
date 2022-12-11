@@ -8,13 +8,13 @@
                 <form class="" (submit)="tripDetails()" [formGroup]="tripDetailsForm">
                     <div class="p-inputtext-sm w-full mb-4">
                         <label for="source"d>Source:</label><br>
-                        <input type="text" for="source" pInputText class="w-full mt-2" placeholder="Enter trip source" formControlName="source">
+                        <input type="text" for="source" pInputText class="w-full mt-2" placeholder="Enter ride source" formControlName="source">
                         <small class="p-invalid" style="color:red" *ngIf="source.hasError('required') && source.touched">This field is required!</small>
                     </div>
             
                     <div class="p-inputtext-sm w-full mb-4">
                         <label for="destination"d>Destination:</label><br>
-                        <input type="text" for="destination" pInputText class="w-full mt-2" placeholder="Enter trip destination" formControlName="destination">
+                        <input type="text" for="destination" pInputText class="w-full mt-2" placeholder="Enter ride destination" formControlName="destination">
                         <small class="p-invalid" style="color:red" *ngIf="destination.hasError('required') && destination.touched">This field is required!</small>
                     </div>
             
@@ -25,8 +25,14 @@
                     </div>
                     
                     <div class="p-inputtext-sm w-full mb-4">
+                        <label for="startTime"d>Start Date:</label><br>
+                        <p-calendar inputId="basic" dateFormat="dd.mm.yy" styleClass="w-full mt-2" formControlName="startDate" placeholder="Enter ride start date" [minDate]="minDate" [readonlyInput]="true"></p-calendar>
+                        <small class="p-invalid" style="color:red" *ngIf="startTime.hasError('required') && startTime.touched">This field is required!</small>
+                    </div>
+                    
+                    <div class="p-inputtext-sm w-full mb-4">
                         <label for="startTime"d>Start Time:</label><br>
-                        <input type="text" for="startTime" pInputText class="w-full mt-2" placeholder="Enter trip start time" formControlName="startTime">
+                        <p-calendar [timeOnly]="true" [hourFormat]="'12'" styleClass="w-full mt-2" placeholder="Enter ride start time" formControlName="startTime"></p-calendar>
                         <small class="p-invalid" style="color:red" *ngIf="startTime.hasError('required') && startTime.touched">This field is required!</small>
                     </div>
             
