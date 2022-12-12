@@ -42,6 +42,8 @@ import {InputNumberModule} from 'primeng/inputnumber';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {SidebarModule} from 'primeng/sidebar';
+import {AccordionModule} from 'primeng/accordion';
+
 const all = [
   // FlexLayoutModule,
   ReactiveFormsModule,
@@ -83,6 +85,7 @@ const all = [
   InputTextareaModule,
   OverlayPanelModule,
   SidebarModule,
+  AccordionModule
 ]
 
 @NgModule({

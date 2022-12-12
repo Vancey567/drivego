@@ -17,8 +17,8 @@
         <!-- after login -->
         <a (click)="move('start-ride')" *ngIf="cookieExists">Book a Ride</a>
         <a (click)="move('start-trip')" *ngIf="cookieExists">Start a Trip</a>
-        <a (click)="move('start-trip')" *ngIf="cookieExists">History</a>
+        <a (click)="move('history/rider')" *ngIf="cookieExists">History</a>
         <a (click)="move('refer')" *ngIf="cookieExists">Refer a Friend</a>
-        <button (click)="move('login')" *ngIf="cookieExists">Logout</button>
+        <button (click)="move('logout')" *ngIf="cookieExists">Logout</button>
     </div>
 </div>

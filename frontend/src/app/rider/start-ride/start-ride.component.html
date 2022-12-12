@@ -3,7 +3,7 @@
         <div class="wrap-login">
             <div class="login-form validate-form">
                 <span class="login-form-title my-3">
-                    Book a ride
+                    Search a ride
                 </span>
                 <form class="" (submit)="tripDetails()" [formGroup]="tripDetailsForm">
                     <div class="p-inputtext-sm w-full mb-4">
@@ -25,7 +25,7 @@
                     </div>
             
                     <div class="flex justify-content-center align-items-center ">
-                        <button pButton type="submit" label="SUBMIT" class="p-button-success" [disabled]="tripDetailsForm.invalid || tripDetailsBtn" icon="" [loading]="tripDetailsBtn"></button>
+                        <button pButton type="submit" label="SEARCH" class="p-button-success" [disabled]="tripDetailsForm.invalid || tripDetailsBtn" icon="" [loading]="tripDetailsBtn"></button>
                     </div>
                 </form>
             </div>
@@ -33,4 +33,62 @@
     </div>
     <div class="w-7"></div>
 </div>
+
+<p-dialog #dialog header="Register Vehicle" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false">
+    <p-accordion>
+        <p-accordionTab header="Maruti Suzuki(₹200.00/-)" *ngFor="let trip of matchedTrips">
+                <div class="flex flex-column justify-content-center align-items-center mb-4">
+                    <img src="assets/images/car1.jpeg" height="100px" class="">
+                    <h3 class="text-center uppercase">Maruti Desizer XUV</h3>
+                    <p class="text-center uppercase">Montu Bora(Male)</p>
+                </div>
+                <div class="flex justify-content-center align-items-center mb-4">
+                    <div class="flex justify-content-between align-items-center w-11">
+                        <table class="flex-1" >
+                            <tr>
+                                <td class="font-bold">Source</td>
+                                <td>{{trip.source}}</td>
+                                <td class="font-bold">Destination</td>
+                                <td>{{trip.destination}}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Available Seats</td>
+                                <td>{{trip.availableSeats}}</td>
+                                <td class="font-bold">Ride Fare</td>
+                                <td>{{trip.fare | currency:'INR'}}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Start Date & Time</td>
+                                <td>{{trip.expectedStartTime | date:'medium'}}</td>
+                                <td class="font-bold">Vehicle Type</td>
+                                <td>4-Whealer</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Vehicle Color</td>
+                                <td>Red</td>
+                                <td class="font-bold">Vehicle Number</td>
+                                <td>AS01ED9801</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="flex flex-column justify-content-center align-items-center mb-4">
+                    <button pButton type="button" label="Request For Ride" class="p-button-warning" (click)="requestDriver(trip.driver)" [loading]="tripRequestBtn"></button>
+                </div>
+        </p-accordionTab>
+    </p-accordion>
+    
+</p-dialog>
 <p-toast></p-toast>
+
+<!-- 
+    Vehicle Color
+    Vehicle Number
+    Vehicle Type
+    Car Maker
+    Model
+    driver Name
+    Driver Gender
+    More than One ride req
+ -->

@@ -29,10 +29,20 @@ export class BookRideService {
   //   return ajax;
   // }
 
+  insertRideDetails(formdata: any): Observable<any>{
+    const ajax = this.http.post<any>(this.apiURL + '/rider/createRide',formdata,this.httpOptions).pipe(catchError(this.handleError));
+    return ajax;
+  }
+
   searchRide(formdata: any): Observable<any>{
-    // console.log(formdata);
-    
-    const ajax = this.http.post<any>(this.apiURL + '/sendotp',formdata,this.httpOptions).pipe(catchError(this.handleError));
+    console.log(formdata);
+    const ajax = this.http.post<any>(this.apiURL + '/findTrip',formdata,this.httpOptions).pipe(catchError(this.handleError));
+    return ajax;
+  }
+
+  requestDriver(formdata: any): Observable<any>{
+    console.log(formdata);
+    const ajax = this.http.post<any>(this.apiURL + '/requestDriver',formdata,this.httpOptions).pipe(catchError(this.handleError));
     return ajax;
   }
 

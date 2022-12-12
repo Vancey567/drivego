@@ -6,12 +6,13 @@ import {CookieService} from 'ngx-cookie-service';
 import {MessageService} from 'primeng/api';
 
 @Component({
-  selector: 'app-start-trip',
-  templateUrl: './start-trip.component.html',
-  styleUrls: ['./start-trip.component.scss'],
+  selector: 'app-rider',
+  templateUrl: './rider.component.html',
+  styleUrls: ['./rider.component.scss'],
   providers: [CookieService,MessageService]
 })
-export class StartTripComponent implements OnInit {
+export class RiderComponent implements OnInit {
+
   displayModal: boolean= false;
   public registerVehicleForm: any;
   public registerVehicleBtn: boolean= false;
