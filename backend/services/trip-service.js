@@ -1,5 +1,6 @@
 const MatchedTripModel = require('../models/matchedTrip-model');
 const DriverModel = require('../models/driver-model');
+const RiderModel = require('../models/rider-model');
 const RequestedTripModel = require('../models/driver-model');
 var ObjectId = require('mongoose').Types.ObjectId;
 
@@ -38,26 +39,11 @@ class tripService {
             throw new Error(err);
         }
     }
-
+    
     async requestDriver(riderId, driverId) {
         try {
-            // let requestedTrip = await MatchedTripModel.create({ rider: new ObjectId(riderId), driver: new ObjectId(driverId) });
-            // console.log("requestedTrip", requestedTrip);
-
-            // requestedTrip = await requestedTrip.populate('rider');
-            // console.log("Updated", requestedTrip);
-            // return requestedTrip;
-
-            const trip = new MatchedTripModel({ rider: new ObjectId(riderId), driver: new ObjectId(driverId) })
-
-            trip.save().then(result => {
-                MatchedTripModel.populate(result, {path: 'rider'}, (err, data) => {
-                    console.log(data);
-                })
-            }).catch(err => {
-                console.log(err);
-                throw new Error(err)
-            })
+            let requestedTrip = await (await (await MatchedTripModel.create({ rider: new ObjectId(riderId), driver: new ObjectId(driverId) })).populate('rider')).populate('driver');
+            return requestedTrip;
         } catch (err) {
             console.log(err);
             throw new Error(err);
@@ -82,7 +68,6 @@ class tripService {
                     { new: true }
                 );
             }
-            console.log("Inside", accepted);
             return accepted.status === "accepted" ? true : false;
         } catch (err) {
             console.log(err);
@@ -111,7 +96,7 @@ class tripService {
 
     async saveMatchedTrip(rider, driver) {
         try {
-            const trip = await (await (await MatchedTripModel.create({ rider: rider, driver: driver })).populate('rider')).populate('driver');
+            const trip = await MatchedTripModel.create({ rider: rider, driver: driver }).populate('rider').populate('driver');
             return trip;
         } catch (err) {
             console.log(err);

@@ -2,7 +2,7 @@ const TripModel = require('../models/trip-model');
 const MatchedTrip = require('../models/matchedTrip-model');
 const RiderModel = require('../models/rider-model');
 
-var ObjectId = require('mongoose').Types.ObjectId; 
+var ObjectId = require('mongoose').Types.ObjectId;
 
 class rideService {
     async findDriver({source, destination, time, seats}) {
@@ -51,7 +51,7 @@ class rideService {
     }
 
     async getAllRides(riderId) {
-        const rides = await MatchedTrip.find({rider: ObjectId(riderId)});
+        const rides = await MatchedTrip.find({rider: ObjectId(riderId)}).populate('rider');
         return rides;
     }
 }

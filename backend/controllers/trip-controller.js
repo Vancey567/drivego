@@ -65,8 +65,7 @@ class TripController {
             const otp = await OtpService.generateOtp();
             const data = `${riderId}.${otp}`;
             const hashedOtp = HashService.hashOtp(data);
-            console.log("hashedOtp", hashedOtp);
-
+            
             const accepted = await TripService.acceptRider(riderId, driverId, status, hashedOtp);
             if(!accepted) {
                 return res.status(200).json({message: "Sorry, Driver rejected your ride request!!"});
