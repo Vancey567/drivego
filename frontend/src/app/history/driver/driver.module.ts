@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { DriverRoutingModule } from './driver-routing.module';
 import { DriverComponent } from './driver.component';
+import {AllModuleModule} from './../../all-module/all-module.module';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { DriverComponent } from './driver.component';
   ],
   imports: [
     CommonModule,
-    DriverRoutingModule
+    DriverRoutingModule,
+    AllModuleModule
   ]
 })
 export class DriverModule { }

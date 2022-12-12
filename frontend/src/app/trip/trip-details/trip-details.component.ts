@@ -81,7 +81,7 @@ export class TripDetailsComponent implements OnInit {
           
           if(response.message == "Trip Created Successfully!!"){
             this.messageService.add({severity:'success', summary:'Success', detail:'Trip Created Successfully'});
-            // this.router.navigateByUrl("/start-ride");
+            this.router.navigateByUrl("/history/driver");
           }
           else{
             this.messageService.add({severity:'error', summary:'Error', detail:"Something went wrong! Please try again later."});

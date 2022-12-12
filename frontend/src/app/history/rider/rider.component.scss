@@ -97,6 +97,12 @@
           }
       }
   }
+
+  :host ::ng-deep .p-chip.custom-chip {
+    padding: 0px;
+    font-size: 10px !important;
+    width: 5px;
+}
   
   /*------------------------------------------------------------------
   [ Responsive ]*/

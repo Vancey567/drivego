@@ -1,3 +1,9 @@
-<button [routerLink]="['driver']">Driver</button>
-<button [routerLink]="['rider']">Rider</button>
+<div class="flex w-full">
+    <div class="w-5 mt-3 mb-5 flex justify-content-center align-items-center">
+        <button pButton class="mx-4 p-button-warning" [routerLink]="['driver']">Driver</button>
+        <button pButton class="mx-4 p-button-warning" [routerLink]="['rider']">Rider</button>
+    </div>
+    <div class="w-7"></div>
+</div>
+
 <router-outlet></router-outlet>
