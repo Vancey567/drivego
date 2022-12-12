@@ -9,6 +9,7 @@ const hashService = require('../services/hash-service');
 const userService = require('../services/user-service');
 const tokenService = require('../services/token-service');
 const ReferralService = require('../services/referral-service');
+const ImageService = require('../services/imageUpload-service');
 const UserDto = require('../dtos/user-dtos');
 
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -170,9 +171,9 @@ class AuthController {
 
     async register(req, res) {
         const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        let {userId, name, gender, dob, email, occupation} = req.body;      
+        let {userId, name, gender, dob, email, occupation, image} = req.body;      
 
-        if(!userId, !name || !gender || !dob || !email) {
+        if(!userId, !name || !gender || !dob || !email, !image) {
             return res.json({error: "All fields are required!!"});
         }
 
@@ -186,7 +187,8 @@ class AuthController {
             } else if(err) {
                 return res.json({error: "Something went wrong!"});
             } else {
-                // const imagePath = await imageService.;
+                const imagePath = await ImageService.uploadImg(image);
+                // if(!imagePath) {}
                 const user = await Users.findOneAndUpdate({_id: ObjectId(userId)}, {
                     name: name,
                     gender: gender,

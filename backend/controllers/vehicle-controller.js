@@ -1,10 +1,12 @@
 const Vehicles = require('../models/vehicle-model');
 const VehicleService = require('../services/vehicle-service');
+const ImageService = require('../services/imageUpload-service');
+
 const vehicleDto = require('../dtos/vehicle-dtos'); 
 
 class VehicleController {
     async registerVehicle(req, res) {
-        const {owner, vehicleNumber, model, type, capacity, company, color, image} = req.body;
+        let {owner, vehicleNumber, model, type, capacity, company, color, image} = req.body;
 
         try {
             const vehicle = await Vehicles.find({vehicleNumber: vehicleNumber});
@@ -15,6 +17,8 @@ class VehicleController {
             
             if(!vehicle || vehicle.length === 0 || vehicle === null){
                 try {
+                    image = await ImageService.uploadImg(image);
+
                     const vDto = new vehicleDto({ owner, vehicleNumber, model, type, capacity, company, color, image});
                     const savedVehicle = await VehicleService.saveVehicle(vDto);
                     res.status(200).json({savedVehicle, message: "Vehicle Registered Successfully!!"})
