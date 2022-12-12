@@ -46,6 +46,20 @@ class RideController {
             res.status(200).json({trip: trip});
         }        
     }
+
+    async riderDetails(req, res) {
+        const {riderId} = req.body;
+        try {
+            const rider = await rideService.riderDetails(riderId);
+            if(rider) { 
+                return res.status(200).json(rider);
+            }
+            return res.status(200).json({message: "Rider details not found!!"});
+        } catch(err) {
+            console.log(err);
+            return res.status(400).json({message: "Something went wrong finding rider details!"});
+        }
+    }
 }
 
 module.exports = new RideController();

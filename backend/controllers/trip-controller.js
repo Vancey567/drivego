@@ -147,6 +147,20 @@ class TripController {
             return res.status(400).json({message: "Something went wrong finding trips!"});
         }
     }
+
+    async driverDetail(req, res) {
+        const {driverId} = req.body;
+        try {
+            const driver = await TripService.driverDetails(driverId);
+            if(driver) { 
+                return res.status(200).json(driver);
+            }
+            return res.status(200).json({message: "Driver details not found!!"});
+        } catch(err) {
+            console.log(err);
+            return res.status(400).json({message: "Something went wrong finding driver details!"});
+        }
+    }
     
 
     // async saveMatchedTrip(req, res) {

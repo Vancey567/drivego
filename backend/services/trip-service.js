@@ -41,12 +41,23 @@ class tripService {
 
     async requestDriver(riderId, driverId) {
         try {
-            let requestedTrip = await MatchedTripModel.create({ rider: new ObjectId(riderId), driver: new ObjectId(driverId) });
-            console.log("requestedTrip", requestedTrip);
+            // let requestedTrip = await MatchedTripModel.create({ rider: new ObjectId(riderId), driver: new ObjectId(driverId) });
+            // console.log("requestedTrip", requestedTrip);
 
-            requestedTrip = await (await requestedTrip.populate('rider')).populate('driver');
-            console.log("Updated", requestedTrip);
-            return requestedTrip;
+            // requestedTrip = await requestedTrip.populate('rider');
+            // console.log("Updated", requestedTrip);
+            // return requestedTrip;
+
+            const trip = new MatchedTripModel({ rider: new ObjectId(riderId), driver: new ObjectId(driverId) })
+
+            trip.save().then(result => {
+                MatchedTripModel.populate(result, {path: 'rider'}, (err, data) => {
+                    console.log(data);
+                })
+            }).catch(err => {
+                console.log(err);
+                throw new Error(err)
+            })
         } catch (err) {
             console.log(err);
             throw new Error(err);
@@ -122,8 +133,10 @@ class tripService {
         }
     }
 
-    async requestApproval(riderId, driverId, data) {
-
+    async driverDetails(driverId) {
+        const riderDetail = await DriverModel.findOne({driver: ObjectId(driverId)}).populate('vehicle');
+        console.log(riderDetail);
+        return riderDetail;
     }
 }
 

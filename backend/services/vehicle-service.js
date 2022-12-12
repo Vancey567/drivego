@@ -4,7 +4,7 @@ class VehicleService {
     async findOwnersVehicles(owner) {
         try {
             const ownerId = new ObjectId(owner);
-            return await VehiclesModel.find({owner: ownerId});
+            return await VehiclesModel.find({owner: ownerId}).populate('owner');
         } catch(err) {
             console.log(err);
             throw new Error(err.message);
@@ -23,7 +23,7 @@ class VehicleService {
 
     async findVehicleById(vehicleId) {
         try {
-            const vehicles = await VehiclesModel.findById(vehicleId);
+            const vehicles = await VehiclesModel.findById(vehicleId).populate('owner');
             return vehicles;
         } catch(err) {
             console.log(err);
@@ -33,7 +33,7 @@ class VehicleService {
 
     async findVehicleByNumber(vehicleNo) {
         try {
-            const vehicles = await VehiclesModel.find({vehicleNumber: vehicleNo});
+            const vehicles = await VehiclesModel.find({vehicleNumber: vehicleNo}).populate('owner');
             return vehicles;
         } catch(err) {
             console.log(err);

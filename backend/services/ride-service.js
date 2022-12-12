@@ -46,7 +46,7 @@ class rideService {
     }
 
     async riderDetails(riderId) {
-        const riderDetail = await RiderModel.findOne({rider: ObjectId(riderId)});
+        const riderDetail = await RiderModel.findOne({rider: ObjectId(riderId)}).populate('rider');
         return riderDetail;
     }
 

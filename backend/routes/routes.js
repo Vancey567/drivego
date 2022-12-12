@@ -26,10 +26,13 @@ router.post('/removevehicle', vehicleController.removeVehicle);
 // Rider
 router.post('/rider/createRide', rideController.createRide);
 router.post('/allRides', rideController.allRides);
+router.post('/riderDetails', rideController.riderDetails);
 
 // Driver
 router.post('/trip/createDriversTrip', tripController.createDriversTrip);
 router.post('/allTrips', tripController.allTrips);
+router.post('/driverDetails', tripController.driverDetail);
+
 
 // Rider's Trip
 router.post('/findTrip', tripController.findTrip);
