@@ -9,14 +9,14 @@ const vehicleSchema = new Schema ({
     type: {type: String, enum: ['2-wheeler', '3-wheeler', '4-wheeler', 'others'], required: true},
     capacity: {type: Number, required: true},
     color: {type: String, required: true},
-    vehicleImg: {
+    image: {
         type: String,
         required: false,
-        get: (vehicleImg) => {
-            if(vehicleImg) {
-                return `${process.env.BASE_URL}${vehicleImg}`;
+        get: (image) => {
+            if(image) {
+                return `${process.env.BASE_URL}${image}`;
             }
-            return vehicleImg;
+            return image;
         }
     },
     activated: { type: Boolean, required: false, default: false }

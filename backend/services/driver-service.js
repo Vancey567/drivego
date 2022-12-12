@@ -1,10 +1,12 @@
-const driverModel = require('../models/driver-model');
+const DriverModel = require('../models/driver-model');
+const MatchedTrip = require('../models/matchedTrip-model');
+
 var ObjectId = require('mongoose').Types.ObjectId; 
 
 class driverService {
     async isDriverOccupied(driverId) {
         try {
-            const driver = await driverModel.find({driver: ObjectId(driverId)});  
+            const driver = await DriverModel.find({driver: ObjectId(driverId)});  
             return driver.length === 0? false : true;
         } catch (err) {
             console.log(err);
@@ -12,13 +14,14 @@ class driverService {
         }
     }
 
-    async driverApproval(driver, rider) {
-        
+    async getAllTrips(driverId) {
+        const rides = await MatchedTrip.find({driver: ObjectId(driverId)});
+        return rides;
     }
 
     async saveTrip(driver) {
         try {
-            const createdTrip = await driverModel.create(driver); 
+            const createdTrip = await DriverModel.create(driver); 
             return createdTrip;
         } catch (err) {
             console.log(err);
@@ -27,9 +30,8 @@ class driverService {
     }
 
     async deleteDriverTrip(driverId) {
-        console.log(driverId);
         try {
-            const deletedDriver = await driverModel.findByIdAndDelete(driverId);
+            const deletedDriver = await DriverModel.findByIdAndDelete(driverId);
             return deletedDriver;
         } catch (err) {
             console.log(err);

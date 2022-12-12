@@ -16,10 +16,23 @@ class RideController {
             }
         } catch(err) {
             console.log(err);
-            res.status(400).json({ message: "Problem Creating Ride for You!!"});
+            return res.status(400).json({ message: "Problem Creating Ride for You!!"});
         }
     }
 
+    async allRides(req, res) {
+        const {riderId} = req.body;
+        try {
+            const rides = await rideService.getAllRides(riderId);
+            if(!rides || rides.length === 0) { 
+                return res.status(200).json({message: "No Rides found!!"});
+            }
+            return res.status(200).json(rides);
+        } catch(err) {
+            console.log(err);
+            return res.status(400).json({message: "Something went wrong finding rides!"});
+        }
+    }
     
     async findRide(req, res) {
         const { } = req.body;

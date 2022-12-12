@@ -9,14 +9,14 @@ const userSchema = new Schema({
     dob: {type: Date, required: false},
     occupation: {type: String, required: false},
     password: { type: String, required: false},
-    userImg: {
+    image: {
         type: String, 
         required: false, 
-        get: (userImg) => {
-            if(userImg) {
-                return `${process.env.BASE_URL}${userImg}`;
+        get: (image) => {
+            if(image) {
+                return `${process.env.BASE_URL}${image}`;
             }
-            return userImg;
+            return image;
         }
     },
     isActivated: { type: Boolean, required: false, default: false }

@@ -7,6 +7,10 @@ const vehicleController = require('../controllers/vehicle-controller');
 const rideController = require('../controllers/ride-controller');
 const tripController = require('../controllers/trip-controller');
 const referralController = require('../controllers/referral-controller')
+const paymentController = require('../controllers/payment-controller');
+
+// Middlewares
+const authenticated = require('../middlewares/auth-middleware');
 
 router.get('/home', homeController.home);
 
@@ -21,9 +25,11 @@ router.post('/removevehicle', vehicleController.removeVehicle);
 
 // Rider
 router.post('/rider/createRide', rideController.createRide);
+router.post('/allRides', rideController.allRides);
 
 // Driver
 router.post('/trip/createDriversTrip', tripController.createDriversTrip);
+router.post('/allTrips', tripController.allTrips);
 
 // Rider's Trip
 router.post('/findTrip', tripController.findTrip);
@@ -33,7 +39,7 @@ router.post('/requestDriver', tripController.requestDriver);
 router.post('/driverApproval', tripController.driverApproval);
 router.post('/startTrip', tripController.startTrip);
 router.post('/endTrip', tripController.endTrip);
-
+router.post('/checkout', paymentController.razorpayPayment);
 
 
 

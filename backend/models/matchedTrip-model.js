@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const Rider = require('../models/rider-model');
+const Driver = require('../models/driver-model');
+
 const matchedTripSchema = new Schema ({
-    driver: {type: Schema.Types.ObjectId, ref: 'Driver', required: true},
-    rider: {type: Schema.Types.ObjectId, ref: 'Rider', required: true},
+    driver: {type: Schema.Types.ObjectId, ref: Driver, required: true},
+    rider: {type: Schema.Types.ObjectId, ref: Rider, required: true},
     // vehicle: {type: Schema.Types.ObjectId, ref: 'Vehicle'},
     // source: {type: String, required: true},
     // destination: {type: String, required: true},

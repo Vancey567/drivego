@@ -49,10 +49,10 @@ class TripController {
 
     async requestDriver(req, res) {
         const {riderId, driverId} = req.body;
+        
         try {
             const requestedTrip = await TripService.requestDriver(riderId, driverId);
-            // const trip = await TripService.saveMatchedTrip(riderId, driverId);
-            return res.status(200).json({message: "Driver has been requested. Please wait for confirmation"}, {requestedTrip: requestedTrip});
+            return res.status(200).json({message: "Driver has been requested. Please wait for confirmation", requestedTrip});
         } catch(err) {
             console.log(err);
             return res.status(500).json({message: "Request unsuccessful!!"});
@@ -118,10 +118,13 @@ class TripController {
 
     async endTrip(req, res) {
         const {tripId} = req.body;
-        
+
         try {
             const trip = await TripService.endTrip(tripId);
             if(trip.status === 'completed') {
+                // paymentService.pay() {
+
+                // }
                 return res.status(200).json({message: "Trip Completed Successfully, Hope You Enjoyed!!", trip: trip});
             }
             return res.status(200).json({message: "Trip in progress!!"});
@@ -130,6 +133,21 @@ class TripController {
             return res.status(500).json({message: "Problem ending the trip!"});
         }
     }
+
+    async allTrips(req, res) {
+        const {driverId} = req.body;
+        try {
+            const trips = await DriverService.getAllTrips(driverId);
+            if(!trips || trips.length === 0) { 
+                return res.status(200).json({message: "No Trips found!!"});
+            }
+            return res.status(200).json(trips);
+        } catch(err) {
+            console.log(err);
+            return res.status(400).json({message: "Something went wrong finding trips!"});
+        }
+    }
+    
 
     // async saveMatchedTrip(req, res) {
     //     const {rider, driver} = req.body;
