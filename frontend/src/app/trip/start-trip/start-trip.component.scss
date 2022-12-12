@@ -47,8 +47,7 @@
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
 
-body, html, label {
-    height: 100%;
+body, html, label,h4,p {
     font-family: Poppins-Regular, sans-serif;
 }
 
@@ -72,7 +71,6 @@ body, html, label {
           font-family: Poppins-Medium;
           font-size: 30px;
           color: #000;
-          line-height: 1.2;
           text-align: center;
           text-transform: uppercase;
         
@@ -80,6 +78,22 @@ body, html, label {
         }
         label{
           color: #000;
+        }
+        .card{
+          border: 1px solid #ccc;
+          cursor: pointer;
+          border-radius: 5px;
+          padding: 10px 10px;
+          h4{
+            font-size: 14px;
+          }
+          p{
+            font-size: 14px;
+          }
+        }
+
+        .card:hover{
+          background-color: #F7B731;
         }
     }
 }
