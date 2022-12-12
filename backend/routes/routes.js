@@ -31,6 +31,8 @@ router.post('/requestDriver', tripController.requestDriver);
 
 // Driver's Trip
 router.post('/driverApproval', tripController.driverApproval);
+router.post('/startTrip', tripController.startTrip);
+router.post('/endTrip', tripController.endTrip);
 
 
 

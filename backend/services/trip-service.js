@@ -50,15 +50,15 @@ class tripService {
     }
 
     async acceptRider(driverId, riderId, status, hashedOtp) {
+        console.log({driverId, riderId, status, hashedOtp});
+
         try {
             let accepted;
             if(status === 'accepted') {
                 accepted = await MatchedTripModel.findOneAndUpdate(
                     { rider: ObjectId(riderId), driver: ObjectId(driverId) },
-                    { status: status },
-                    { otp: hashedOtp },
-                    {upsert: true},
-                    { new: true }
+                    { status: status, $set: {otp: hashedOtp } },
+                    { upsert: true, new: true }
                 ).exec();
             } else {
                 accepted = await MatchedTripModel.findOneAndUpdate(
@@ -75,8 +75,9 @@ class tripService {
         }
     }
 
-    async getTripDetails() {
-        await MatchedTripModel.findById();
+    async getTripDetails(id) {
+        const tripDetails = await MatchedTripModel.findById(id);
+        return tripDetails;
     }
 
     async startTrip(driverId,  riderId, status, otp) {
@@ -86,7 +87,7 @@ class tripService {
                 { status: "started" },
                 { new: true }
             );
-            return started.status === "started" ? true : false;
+            return started;
         } catch (err) {
             console.log(err);
             throw new Error(err);
@@ -100,6 +101,20 @@ class tripService {
         } catch (err) {
             console.log(err);
             throw new Error(err.message);
+        }
+    }
+
+    async endTrip(tripId) {
+        try {
+            const ended = await MatchedTripModel.findOneAndUpdate(
+                { _id: ObjectId(tripId)},
+                { status: "completed" },
+                { new: true }
+            );
+            return ended;
+        } catch (err) {
+            console.log(err);
+            throw new Error(err);
         }
     }
 

@@ -50,9 +50,9 @@ class TripController {
     async requestDriver(req, res) {
         const {riderId, driverId} = req.body;
         try {
-            await TripService.requestDriver(riderId, driverId);
+            const requestedTrip = await TripService.requestDriver(riderId, driverId);
             // const trip = await TripService.saveMatchedTrip(riderId, driverId);
-            return res.status(200).json({message: "Driver has been requested. Please wait for confirmation"});
+            return res.status(200).json({message: "Driver has been requested. Please wait for confirmation"}, {requestedTrip: requestedTrip});
         } catch(err) {
             console.log(err);
             return res.status(500).json({message: "Request unsuccessful!!"});
@@ -68,7 +68,6 @@ class TripController {
             console.log("hashedOtp", hashedOtp);
 
             const accepted = await TripService.acceptRider(riderId, driverId, status, hashedOtp);
-            
             if(!accepted) {
                 return res.status(200).json({message: "Sorry, Driver rejected your ride request!!"});
             }
@@ -98,24 +97,37 @@ class TripController {
 
         try {
             const data = `${riderId}.${otp}`;
-            const newHash = HashService.hashOtp(data);
-
             const tripDetails = await TripService.getTripDetails(tripId);
-            const hash = tripDetails.otp;
-            const [ riderId, hashedOtp ] = hash.split('.');
+            const hashedOtp = tripDetails.otp;
 
-            const verified = await OtpService.verifyOtp(hashedOtp, newHash);
+            const verified = await OtpService.verifyOtp(hashedOtp, data);
             if(!verified) {
                 return res.status(200).json({message: "OTP didn't match!!"});
             }
 
-            const started = await TripService.startTrip(riderId, driverId);
-            if(!started) {
-                return res.status(200).json({message: "Sorry, Driver rejected your ride request!!"});
+            const trip = await TripService.startTrip(riderId, driverId);
+            if(trip.status === 'started') {
+                return res.status(200).json({message: "Trip Started, Enjoy!!", trip: trip});
             }
-            return res.status(200).json({message: "Trip Started, Enjoy!!"});
+            return res.status(200).json({message: "Trip not started yet!!", trip: trip});
         } catch(err) {
+            console.log(err);
+            return res.status(500).json({message: "Problem starting the trip!"});
+        }
+    }
 
+    async endTrip(req, res) {
+        const {tripId} = req.body;
+        
+        try {
+            const trip = await TripService.endTrip(tripId);
+            if(trip.status === 'completed') {
+                return res.status(200).json({message: "Trip Completed Successfully, Hope You Enjoyed!!", trip: trip});
+            }
+            return res.status(200).json({message: "Trip in progress!!"});
+        } catch(err) {
+            console.log(err);
+            return res.status(500).json({message: "Problem ending the trip!"});
         }
     }
 
