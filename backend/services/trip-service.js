@@ -1,7 +1,7 @@
 const MatchedTripModel = require('../models/matchedTrip-model');
 const DriverModel = require('../models/driver-model');
 const RequestedTripModel = require('../models/driver-model');
-var ObjectId = require('mongoose').Types.ObjectId; 
+var ObjectId = require('mongoose').Types.ObjectId;
 
 
 class tripService {
@@ -22,7 +22,7 @@ class tripService {
     //     }
     // }
 
-    async findDriver(source, destination, time) {        
+    async findDriver(source, destination, time) {
         try {
             const driver = await DriverModel.find({
                 source: source,
@@ -39,9 +39,13 @@ class tripService {
         }
     }
 
-    async requestDriver(rider, driver) {
+    async requestDriver(riderId, driverId) {
         try {
-            const requestedTrip = await (await (await MatchedTripModel.create({ rider: new ObjectId(rider), driver: new ObjectId(driver) })).populate('rider')).populate('driver');
+            let requestedTrip = await MatchedTripModel.create({ rider: new ObjectId(riderId), driver: new ObjectId(driverId) });
+            console.log("requestedTrip", requestedTrip);
+
+            requestedTrip = await (await requestedTrip.populate('rider')).populate('driver');
+            console.log("Updated", requestedTrip);
             return requestedTrip;
         } catch (err) {
             console.log(err);
@@ -50,14 +54,14 @@ class tripService {
     }
 
     async acceptRider(driverId, riderId, status, hashedOtp) {
-        console.log({driverId, riderId, status, hashedOtp});
+        console.log({ driverId, riderId, status, hashedOtp });
 
         try {
             let accepted;
-            if(status === 'accepted') {
+            if (status === 'accepted') {
                 accepted = await MatchedTripModel.findOneAndUpdate(
                     { rider: ObjectId(riderId), driver: ObjectId(driverId) },
-                    { status: status, $set: {otp: hashedOtp } },
+                    { status: status, $set: { otp: hashedOtp } },
                     { upsert: true, new: true }
                 ).exec();
             } else {
@@ -80,7 +84,7 @@ class tripService {
         return tripDetails;
     }
 
-    async startTrip(driverId,  riderId, status, otp) {
+    async startTrip(driverId, riderId, status, otp) {
         try {
             const started = await MatchedTripModel.findOneAndUpdate(
                 { rider: ObjectId(riderId), driver: ObjectId(driverId) },
@@ -107,7 +111,7 @@ class tripService {
     async endTrip(tripId) {
         try {
             const ended = await MatchedTripModel.findOneAndUpdate(
-                { _id: ObjectId(tripId)},
+                { _id: ObjectId(tripId) },
                 { status: "completed" },
                 { new: true }
             );
