@@ -173,7 +173,7 @@ class AuthController {
         const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         let {userId, name, gender, dob, email, occupation, image} = req.body;      
 
-        if(!userId, !name || !gender || !dob || !email || !image) {
+        if(!userId, !name || !gender || !dob || !email) {
             return res.json({error: "All fields are required!!"});
         }
 

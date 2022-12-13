@@ -3,9 +3,9 @@ const path = require('path');
 
 class UploadController {
     async uploadImg(image) {
-        if(!image) {
-            throw new Error({message: "Image is required!"});
-        }
+        // if(!image) {
+        //     throw new Error({message: "Image is required!"});
+        // }
 
         const buffer = Buffer.from(
             image.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''),
