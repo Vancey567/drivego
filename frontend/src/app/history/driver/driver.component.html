@@ -1,1 +1,101 @@
-<p>driver works!</p>
+<div class="flex max-h-screen">
+    <div class="w-5 mt-1 mb-5 flex flex-column justify-content-center align-items-center">
+        <div class="wrap-login">
+            <div class="login-form validate-form">
+                
+                <div class="flex justify-content-center mb-4">
+                    <span class="login-form-title text-center">
+                        Drive History
+                    </span>
+                </div>
+    
+                <div class="flex flex-column"> 
+                    <div class="w-full mb-4 card" *ngFor="let ride of allRides" (click)="detailsModel(ride)">
+                        <div class="grid w-full">
+                            <div class="col-4 flex justify-content-center align-items-center">
+                                <img src="assets/images/car1.jpeg" height="60px" class="">
+                            </div>
+                            <div class="col-8">
+                                <!-- <h4 class="text-center uppercase">{{ride.vehicle.company}} {{ride.model}}</h4> -->
+                                <div class="flex justify-content-between align-items-center ">
+                                    <div>
+                                        <p><b>Source:</b> {{ride.source}}</p>
+                                        <p><b>Time:</b> {{ride.preferredTripTime|date:'medium'}}</p> 
+                                    </div>
+                                    <div>
+                                        <p><b>Destination:</b> {{ride.destination}}</p>
+                                        <p class="capitalize"><b>Status:</b> {{ride.status}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="w-7"></div>
+</div>
+
+<p-dialog #dialog header="Details" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false">
+    <div class="flex flex-column justify-content-center align-items-center mb-4">
+        <img src="assets/images/car1.jpeg" height="100px" class="">
+        <!-- <h3 class="text-center uppercase">{{currentDetails.company}} {{currentDetails.model}}</h3> -->
+        <!-- <p class="text-center uppercase">Driver: Montu Bora(Male)</p> -->
+        <p-chip [label]="currentDetails.status" styleClass="bg-primary capitalize"></p-chip>
+    </div>
+    <div class="flex justify-content-center align-items-center mb-4">
+        <div class="flex justify-content-between align-items-center w-11">
+            <table class="flex-1" >
+                <tr>
+                    <td class="font-bold">Source</td>
+                    <td>{{currentDetails.source}}</td>
+                    <td class="font-bold">Destination</td>
+                    <td>{{currentDetails.destination}}</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Start Date</td>
+                    <td>{{currentDetails.preferredTripTime | date:'mediumDate'}}</td>
+                    <td class="font-bold">Start Time</td>
+                    <td>{{currentDetails.preferredTripTime | date:'shortTime'}}</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Rider Name</td>
+                    <td>{{currentDetails.rider.name}}</td>
+                    <td class="font-bold">Rider Occupation</td>
+                    <td>{{currentDetails.rider.occupation}}</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Rider Gender</td>
+                    <td>{{currentDetails.rider.gender}}</td>
+                    <td class="font-bold">Rider Mobile</td>
+                    <td>{{currentDetails.rider.phone}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="flex justify-content-around align-items-center mb-4" *ngIf="currentDetails.status == 'pending'">
+        <button pButton type="button" label="ACCEPT" class="p-button-warning" (click)="driverApproval('accepted',currentDetails.rider._id)" [loading]="acceptBtn"></button>
+        <button pButton type="button" label="DECLINE" class="p-button-danger" (click)="driverApproval('declined',currentDetails.rider._id)" [loading]="rejectBtn"></button>
+    </div>
+    
+    <div class="flex justify-content-center align-items-center mb-4 " *ngIf="currentDetails.status == 'accepted'">
+        <form class=" w-7" #verifyOTPFormTag (submit)="verifyOTP(currentDetails.rider._id)" [formGroup]="verifyOTPForm">
+            <div class="p-inputtext-sm w-full mb-4">
+                <input type="number" for="verifyOTP" pInputText class="w-full mt-2" placeholder="Enter OTP here" formControlName="verifyOTP">
+            </div>
+
+            <div class="flex justify-content-center align-items-center ">
+                <button pButton type="submit" label="START TRIP" class="p-button-success" [disabled]="verifyOTPForm.invalid || verifyOTPBtn" icon="" [loading]="verifyOTPBtn"></button>
+            </div>
+        </form>
+    </div>
+
+    <div class="flex justify-content-around align-items-center mb-4" *ngIf="currentDetails.status == 'started'">
+        <button pButton type="button" label="COMPLETE TRIP" class="p-button-warning" (click)="endTrip()" [loading]="endTripBtn"></button>
+    </div>
+   
+</p-dialog>
+
+<p-toast></p-toast>

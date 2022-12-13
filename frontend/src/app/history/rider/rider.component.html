@@ -1,5 +1,5 @@
 <div class="flex max-h-screen">
-    <div class="w-5 mt-3 mb-5 flex flex-column justify-content-center align-items-center">
+    <div class="w-5 mt-1 mb-5 flex flex-column justify-content-center align-items-center">
         <div class="wrap-login">
             <div class="login-form validate-form">
                 
@@ -10,22 +10,25 @@
                 </div>
     
                 <div class="flex flex-column"> 
-                    <div class="w-full mb-4 card" *ngFor="let vehicles of allVehicles" (click)="tripStartModal(vehicles.id)">
+                    <div class="w-full mb-4 card" *ngFor="let ride of allRides" (click)="detailsModel(ride)">
                         <div class="grid w-full">
-                            <div class="col-4 flex justify-content-center align-items-center">
+                            <div class="col-4 flex flex-column justify-content-center align-items-center">
                                 <img src="assets/images/car1.jpeg" height="60px" class="">
+                                <p-chip [label]="ride.status" styleClass="bg-primary capitalize text-xs"></p-chip>
                             </div>
-                            
                             <div class="col-8">
-                                <h4 class="text-center uppercase">{{vehicles.company}} {{vehicles.model}}</h4>
+                                <div class="flex justify-content-center align-items-center">
+                                    <h4 class="text-center uppercase">{{ride.vehicle.company}} {{ride.model}}</h4>
+                                    <!-- <p-chip [label]="ride.status" styleClass="ml-2 bg-primary capitalize text-xs"></p-chip> -->
+                                </div>
                                 <div class="flex justify-content-between align-items-center ">
                                     <div>
-                                        <p><b>Color:</b> {{vehicles.color}}</p>
-                                        <p><b>Capacity:</b> {{vehicles.capacity}}</p>
+                                        <p><b>Source:</b> {{ride.source}}</p>
+                                        <p><b>Time:</b> {{ride.expectedStartTime|date:'medium'}}</p> 
                                     </div>
                                     <div>
-                                        <p><b>Type:</b> {{vehicles.type}}</p> 
-                                        <p><b>No:</b> {{vehicles.vehicleNumber}}</p>
+                                        <p><b>Destination:</b> {{ride.destination}}</p>
+                                        <p><b>Fare:</b> {{ride.fare}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -38,55 +41,51 @@
     <div class="w-7"></div>
 </div>
 
-<p-dialog #dialog header="Register Vehicle" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+<p-dialog #dialog header="Details" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
     [draggable]="false" [resizable]="false">
-    <form class="" (submit)="registerVehicle()" [formGroup]="registerVehicleForm">
-        <div class="p-inputtext-sm w-full mb-4">
-            <label for="company">Car Maker:</label><br>
-            <input type="text" for="company" pInputText class="w-full mt-2" placeholder="Ex. Suzuki" formControlName="company">
-            <small class="p-invalid" style="color:red" *ngIf="company.hasError('required') && company.touched">This field is required!</small>
+    <div class="flex flex-column justify-content-center align-items-center mb-4">
+        <img src="assets/images/car1.jpeg" height="100px" class="">
+        <h3 class="text-center uppercase">{{currentDetails.vehicle.company}} {{currentDetails.vehicle.model}}</h3>
+        <!-- <p class="text-center uppercase">Driver: Montu Bora(Male)</p> -->
+        <p-chip [label]="currentDetails.status" styleClass="mr-2 bg-primary capitalize"></p-chip>
+    </div>
+    <div class="flex justify-content-center align-items-center mb-4">
+        <div class="flex justify-content-between align-items-center w-11">
+            <table class="flex-1" >
+                <tr>
+                    <td class="font-bold">Source</td>
+                    <td>{{currentDetails.source}}</td>
+                    <td class="font-bold">Destination</td>
+                    <td>{{currentDetails.destination}}</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Vehicle Type</td>
+                    <td>{{currentDetails.vehicle.type}}</td>
+                    <td class="font-bold">Ride Fare</td>
+                    <td>{{currentDetails.fare | currency:'INR'}}</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Start Date & Time</td>
+                    <td>{{currentDetails.expectedStartTime | date:'medium'}}</td>
+                    <td class="font-bold">Vehicle Type</td>
+                    <td>{{currentDetails.vehicle.type}}</td>
+                </tr>
+                <tr>
+                    <td class="font-bold">Vehicle Color</td>
+                    <td>{{currentDetails.vehicle.color}}</td>
+                    <td class="font-bold">Vehicle Number</td>
+                    <td>{{currentDetails.vehicle.vehicleNumber}}</td>
+                </tr>
+            </table>
         </div>
-
-        <div class="p-inputtext-sm w-full mb-4">
-            <label for="model">Model:</label><br>
-            <input type="text" for="model" pInputText class="w-full mt-2" placeholder="Ex. XUV" formControlName="model">
-            <small class="p-invalid" style="color:red" *ngIf="models.hasError('required') && models.touched">This field is required!</small>
-        </div>
-
-        <div class="p-inputtext-sm w-full mb-4">
-            <label for="type">Type:</label><br>
-            <p-dropdown appendTo="dialog" styleClass="w-full mt-2" [options]="vehicleType" optionLabel="name" optionValue="value" placeholder="Enter vehicle type" formControlName="type"></p-dropdown>
-            <small class="p-invalid" style="color:red" *ngIf="type.hasError('required') && type.touched">This field is required!</small>
-        </div>
-
-        <div class="p-inputtext-sm w-full mb-4">
-            <label for="vehicleNumber">Vehicle Number:</label><br>
-            <input type="text" for="vehicleNumber" pInputText class="w-full mt-2" placeholder="Enter your vehicle no" formControlName="vehicleNumber">
-            <small class="p-invalid" style="color:red" *ngIf="vehicleNumber.hasError('required') && vehicleNumber.touched">This field is required!</small>
-        </div>
-
-        <div class="p-inputtext-sm w-full mb-4">
-            <label for="capacity"d>Capacity:</label><br>
-            <input type="number" for="capacity" pInputText class="w-full mt-2" placeholder="Enter capacity" formControlName="capacity">
-            <small class="p-invalid" style="color:red" *ngIf="capacity.hasError('required') && capacity.touched">This field is required!</small>
-        </div>
-        
-        <div class="p-inputtext-sm w-full mb-4">
-            <label for="color"d>Color:</label><br>
-            <input type="text" for="color" pInputText class="w-full mt-2" placeholder="Enter color" formControlName="color">
-            <small class="p-invalid" style="color:red" *ngIf="color.hasError('required') && color.touched">This field is required!</small>
-        </div>
-        
-        <div class="p-inputtext-sm w-full mb-4">
-            <label for="vehicleImg"d>Vehicle Image:</label><br>
-            <input type="file" for="vehicleImg" pInputText class="w-full mt-2" placeholder="Enter vehicle image" formControlName="vehicleImg">
-            <small class="p-invalid" style="color:red" *ngIf="vehicleImg.hasError('required') && vehicleImg.touched">This field is required!</small>
-        </div>
-
-        <div class="flex justify-content-center align-items-center ">
-            <button pButton type="submit" label="SUBMIT" class="p-button-success" [disabled]="registerVehicleForm.invalid || registerVehicleBtn" icon="" [loading]="registerVehicleBtn"></button>
-        </div>
-    </form>
+    </div>
+    <div class="flex flex-column justify-content-center align-items-center mb-4">
+        <button pButton type="button" label="OTP: 7847" class="p-button-warning p-button-outlined"></button>
+    </div>
+    <!-- <div class="flex flex-column justify-content-center align-items-center mb-4">
+        <button pButton type="button" label="Request For Ride" class="p-button-warning" (click)="requestDriver(trip.driver)" [loading]="acceptButton"></button>
+    </div> -->
+   
 </p-dialog>
 
 <p-toast></p-toast>
