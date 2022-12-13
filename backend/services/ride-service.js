@@ -51,7 +51,7 @@ class rideService {
     }
 
     async getAllRides(riderId) {
-        const rides = await MatchedTrip.find({rider: ObjectId(riderId)}).populate('rider');
+        const rides = await MatchedTrip.find({rider: ObjectId(riderId)});
         return rides;
     }
 }

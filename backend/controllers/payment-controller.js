@@ -6,7 +6,7 @@ const RAZORPAY_SECRET = process.env.RAZORPAY_SECRET;
 class PaymentController {
     async razorpayPayment(req, res) {
         const {driverId, riderId, amount} = req.body;
-
+        
         var instance = new Razorpay({ key_id: RAZORPAY_KEY, key_secret: RAZORPAY_SECRET })
 
         const options = {
