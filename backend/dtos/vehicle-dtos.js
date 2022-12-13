@@ -16,7 +16,7 @@ class vehicleDto {
         this.type = vehicle.type;
         this.capacity = vehicle.capacity;
         this.color = vehicle.color;
-        this.image = vehicle.image;
+        // this.image = vehicle.image;
     }
 }
 

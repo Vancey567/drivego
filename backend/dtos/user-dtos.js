@@ -18,7 +18,7 @@ class UserDto {
         this.email = user.email;
         this.dob = user.dob;
         this.email = user.email;
-        this.image = user.image;
+        // this.image = user.image;
         this.occupation = user.occupation;
         this.password = user.password;
         this.isActivated = user.isActivated;

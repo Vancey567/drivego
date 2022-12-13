@@ -187,7 +187,7 @@ class AuthController {
             } else if(err) {
                 return res.json({error: "Something went wrong!"});
             } else {
-                const imagePath = await ImageService.uploadImg(image);
+                // const imagePath = await ImageService.uploadImg(image);
 
                 const user = await Users.findOneAndUpdate({_id: ObjectId(userId)}, {
                     name: name,
@@ -196,7 +196,7 @@ class AuthController {
                     dob: dob,
                     occupation: occupation,
                     isActivated: true,
-                    image: imagePath,
+                    // image: imagePath,
                     // password: await hashService.hashPassword(password),
                 }, {
                     new: true // returns the newly updated document
