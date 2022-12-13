@@ -16,7 +16,8 @@ class vehicleDto {
         this.type = vehicle.type;
         this.capacity = vehicle.capacity;
         this.color = vehicle.color;
-        this.image = vehicle.image ? `${process.env.BASE_URL}${vehicle.image}` : null;
+        // this.image = vehicle.image ? `${process.env.BASE_URL}${vehicle.image}` : null;
+        this.image = vehicle.image;
     }
 }
 

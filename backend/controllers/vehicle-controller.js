@@ -18,7 +18,7 @@ class VehicleController {
             if(!vehicle || vehicle.length === 0 || vehicle === null){
                 try {
                     image = await ImageService.uploadImg(image);
-
+                    console.log(image);
                     const vDto = new vehicleDto({ owner, vehicleNumber, model, type, capacity, company, color, image});
                     const savedVehicle = await VehicleService.saveVehicle(vDto);
                     res.status(200).json({savedVehicle, message: "Vehicle Registered Successfully!!"})

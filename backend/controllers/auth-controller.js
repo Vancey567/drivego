@@ -173,7 +173,7 @@ class AuthController {
         const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         let {userId, name, gender, dob, email, occupation, image} = req.body;      
 
-        if(!userId, !name || !gender || !dob || !email, !image) {
+        if(!userId, !name || !gender || !dob || !email || !image) {
             return res.json({error: "All fields are required!!"});
         }
 
@@ -188,7 +188,7 @@ class AuthController {
                 return res.json({error: "Something went wrong!"});
             } else {
                 const imagePath = await ImageService.uploadImg(image);
-                // if(!imagePath) {}
+
                 const user = await Users.findOneAndUpdate({_id: ObjectId(userId)}, {
                     name: name,
                     gender: gender,
@@ -242,10 +242,10 @@ class AuthController {
         await tokenService.removeToken(refreshToken);
 
         // 3. delete that cookies from DB
-        res.clearCookie('refreshToken'); // res has this clearCookie() method inside which we need to pass the key of the cookie(here refreshToken and accessToken) to clear/delete the cookkie
+        res.clearCookie('refreshToken');
         res.clearCookie('accessToken');
-    
-        res.json({ user: null, auth: false }); // now we will send the user as null(since no user) and make the auth as false (not authenticted);
+        
+        res.json({ user: null, auth: false })
     }
 }
 

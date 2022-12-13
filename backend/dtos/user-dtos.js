@@ -16,7 +16,10 @@ class UserDto {
         this.name = user.name;
         this.phone = user.phone;
         this.email = user.email;
-        this.userImg = user.userImg;
+        this.dob = user.dob;
+        this.email = user.email;
+        this.image = user.image;
+        this.occupation = user.occupation;
         this.password = user.password;
         this.isActivated = user.isActivated;
         this.createdAt = user.createdAt;

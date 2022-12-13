@@ -21,7 +21,7 @@ router.post('/register', authController.register);
 router.post('/registervehicle', vehicleController.registerVehicle);
 router.get('/vehicles', vehicleController.allVehicles);
 router.post('/user/vehicles', vehicleController.ownersVehicles);
-router.post('/removevehicle', vehicleController.removeVehicle);
+router.post('/removeVehicle', vehicleController.removeVehicle);
 
 // Rider
 router.post('/rider/createRide', rideController.createRide);
@@ -32,7 +32,6 @@ router.post('/riderDetails', rideController.riderDetails);
 router.post('/trip/createDriversTrip', tripController.createDriversTrip);
 router.post('/allTrips', tripController.allTrips);
 router.post('/driverDetails', tripController.driverDetail);
-
 
 // Rider's Trip
 router.post('/findTrip', tripController.findTrip);
@@ -45,7 +44,6 @@ router.post('/endTrip', tripController.endTrip);
 router.post('/checkout', paymentController.razorpayPayment);
 
 
-
 // Referral
 router.post('/referral', referralController.generateReferral);
 router.post('/referredUsers', referralController.referredUsers);
@@ -55,6 +53,7 @@ router.get('/users', userController.getUsers); // get all users
 router.get('/user/:id', userController.getUsers); // get user details by id
 
 // router.post('/findRide', rideController.findRide);
+router.post('/logout', authController.logout);
 
 
 module.exports = router;

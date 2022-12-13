@@ -23,7 +23,8 @@ class UploadController {
                 // .quality(60) // set JPEG quality
                 .write(path.resolve(__dirname, `../storage/${imageName}`));
 
-            return imagePath = `/storage/${imageName}`;
+            const imagePath = `/storage/${imageName}`;
+            return imagePath;
         } catch(err) {
             console.log(err);
             throw new Error(err)
