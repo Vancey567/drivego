@@ -62,34 +62,16 @@ export class StartRideComponent implements OnInit {
           console.log(response);
           
           if(response.message == "Ride Created Successfully, Soon we will find a trip for you!!"){
-            console.log(123);
-            
             let formdata: any = {
               "riderId": this.cookieService.get('userId')
-            };  
+            };
             const ajax = this.bookRideApi.searchRide(formdata);
             ajax.subscribe(
               (response: any) => {
                 console.log(response);
                 this.matchedTrips = response;
-                console.log(this.matchedTrips);
-                
+                console.log(this.matchedTrips);           
                 this.displayModal = true
-                // if(response.rideData._id){
-                //   const ajax = this.bookRideApi.searchRide(formdata);
-                //   this.cookieService.set("dob",response.user.dob,365,undefined,undefined,true,'Strict');
-                //   this.cookieService.set("isActive",response.user.isActivated,365,undefined,undefined,true,'Strict');
-                //   this.cookieService.set("email",response.user.email,365,undefined,undefined,true,'Strict');
-                //   this.cookieService.set("gender",response.user.gender,365,undefined,undefined,true,'Strict');
-                //   this.cookieService.set("name",response.user.name,365,undefined,undefined,true,'Strict');
-                //   this.cookieService.set("occupation",response.user.occupation,365,undefined,undefined,true,'Strict');
-                //   this.messageService.add({severity:'success', summary:'Success', detail:'User Details Added Successfully'});
-                //   // this.displayModal = false;
-                //   this.router.navigateByUrl("/start-ride");
-                // }
-                // else{
-                //   this.messageService.add({severity:'error', summary:'Error', detail:"Something went wrong! Please try again later."});
-                // }
               },
               (error: any) => {
                 this.messageService.add({severity:'error', summary:'Error', detail:error});
@@ -98,7 +80,6 @@ export class StartRideComponent implements OnInit {
             );
           }
           else{
-            console.log(333);
             
             this.messageService.add({severity:'error', summary:'Error', detail:response.message});
           }

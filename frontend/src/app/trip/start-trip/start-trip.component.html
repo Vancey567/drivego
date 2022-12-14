@@ -80,7 +80,7 @@
         
         <div class="p-inputtext-sm w-full mb-4">
             <label for="vehicleImg"d>Vehicle Image:</label><br>
-            <input type="file" for="vehicleImg" pInputText class="w-full mt-2" placeholder="Enter vehicle image" formControlName="vehicleImg">
+            <input type="file" for="vehicleImg" pInputText class="w-full mt-2" placeholder="Enter vehicle image" formControlName="vehicleImg" accept="image/*" #imageInput (change)="imageUpload(imageInput)">
             <small class="p-invalid" style="color:red" *ngIf="vehicleImg.hasError('required') && vehicleImg.touched">This field is required!</small>
         </div>
 

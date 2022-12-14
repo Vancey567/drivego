@@ -39,6 +39,13 @@ export class HeaderComponent implements OnChanges {
   }
 
   move(url:any){
-    this.router.navigateByUrl("/"+url);
+    if(url == "logout"){
+      this.cookieService.deleteAll();
+      this.router.navigateByUrl("/");
+    }
+    else{
+      this.router.navigateByUrl("/"+url);
+    }
+    
   }
 }

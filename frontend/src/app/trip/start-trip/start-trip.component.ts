@@ -16,6 +16,7 @@ export class StartTripComponent implements OnInit {
   public registerVehicleForm: any;
   public registerVehicleBtn: boolean= false;
   allVehicles:any;
+  currentImage:any;
   // trip
   tripModal: boolean= false;
   vehicleType: any[] = [
@@ -37,7 +38,7 @@ export class StartTripComponent implements OnInit {
         vehicleNumber: ['',[Validators.required]],
         capacity: ['',[Validators.required]],
         color: ['',[Validators.required]],
-        vehicleImg: ['',[Validators.required]]
+        vehicleImg: ['']
       }
     );
 
@@ -75,6 +76,17 @@ export class StartTripComponent implements OnInit {
     return this.registerVehicleForm.get('vehicleImg');
   }
 
+  imageUpload(imageInput:any):void{
+    const file: File = imageInput.files[0];
+    const reader = new FileReader();
+    reader.addEventListener('load', (event: any) => {
+      console.log(event.target.result);
+      this.currentImage = event.target.result;
+    });
+
+    reader.readAsDataURL(file);
+  }
+
   registerVehicle():void{
     this.registerVehicleBtn = true;
     if(this.registerVehicleForm.valid) {
@@ -86,7 +98,7 @@ export class StartTripComponent implements OnInit {
         "type": this.type.value,
         "capacity": this.capacity.value,
         "color": this.color.value,
-        // "vehicleImg": this.vehicleImg.value
+        "image": this.currentImage 
       };
       const ajax = this.vehicleApi.registerVehicle(formdata);
       ajax.subscribe(

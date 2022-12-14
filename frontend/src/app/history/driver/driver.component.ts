@@ -114,7 +114,7 @@ export class DriverComponent implements OnInit {
             this.messageService.add({severity:'error', summary:'Error', detail:"Problem finding trip for your!!"});
           }
           else {
-            this.messageService.add({severity:'success', summary:'Success', detail:"Accepted successfully!"});
+            this.messageService.add({severity:'success', summary:'Success', detail:response.message});
             this.allDrives();
             this.displayModal = false;
           }
@@ -147,7 +147,7 @@ export class DriverComponent implements OnInit {
     if(this.verifyOTPForm.valid) {
       let formdata: any = {
         "otp": this.verifyOTPs.value,
-        "tripId": "6397583cbe7cccc2af42b96d", 
+        "tripId": "6399429c8345e69f3f871f69", 
         "riderId": riderId,
         "driverId": this.cookieService.get('userId')
       };
@@ -172,7 +172,7 @@ export class DriverComponent implements OnInit {
   endTrip():void{
     this.endTripBtn = true;
     let formdata: any = {
-      "tripId": "6397583cbe7cccc2af42b96d", 
+      "tripId": "6399429c8345e69f3f871f69", 
     };
     const ajax = this.historyApi.endTrip(formdata);
     ajax.subscribe(

@@ -39,6 +39,11 @@ export class BookRideService {
     const ajax = this.http.post<any>(this.apiURL + '/findTrip',formdata,this.httpOptions).pipe(catchError(this.handleError));
     return ajax;
   }
+  getDriverDetails(formdata: any): Observable<any>{
+    console.log(formdata);
+    const ajax = this.http.post<any>(this.apiURL + '/user/vehicles',formdata,this.httpOptions).pipe(catchError(this.handleError));
+    return ajax;
+  }
 
   requestDriver(formdata: any): Observable<any>{
     console.log(formdata);
